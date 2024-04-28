@@ -1,6 +1,7 @@
 int TAILLEGRILLE = 20;
 #include <iostream>
 #include <vector>
+#include <cstdlib> 
 using namespace std;
 
 
@@ -25,10 +26,12 @@ class EnsCoord {
         bool estVide() const;
         int taille() const;
         Coord ieme(int n) const;
+        Coord choixHasard() const;
+        void tri();
     private :
         vector<Coord> ens;
         int position(Coord c) const;
 };
 
-EnsCoord voisines(Coord c) const;
+EnsCoord voisines(Coord c);
 
