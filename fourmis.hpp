@@ -4,7 +4,9 @@
 
 class Fourmis{
     public :
+        //Constructeur
         Fourmis(Coord c, int ind);
+        //Getters et setters
         Coord get_coord() const;
         int get_num() const;
         bool get_porteSucre() const ;

@@ -37,6 +37,7 @@ void Fourmis::deplace(Coord c){
 }
 
 
+//Fonctions 
 vector<Fourmis> creeTabFourmis(EnsCoord e){
     vector<Fourmis> res = {};
     for(int i=0;i<e.taille();i++){

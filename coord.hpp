@@ -1,4 +1,3 @@
-int TAILLEGRILLE = 20;
 #include <iostream>
 #include <vector>
 #include <cstdlib> 

@@ -1,5 +1,6 @@
 #include "coord.hpp"
 #include "doctest.h"
+int TAILLEGRILLE = 20;
 
 //---------CLASSE COORDONNÉE--------------
 
