@@ -26,6 +26,7 @@ Place::Place(Coord c){
     numFourmi = -1;
     contientNid = false;
     contientSucre = false;
+    numCol = -1;
 }
 
 
@@ -50,6 +51,12 @@ bool Place::get_estSurUnePiste() const {
     return pheroSucre>0;
 }
 
+bool Place::get_estSurUnePiste(int colonie) const {
+    return pheroSucre>0 and colonie==numCol;
+}
+bool Place::get_contientFourmi(){
+    return numFourmi!=-1;
+}
 float Place::get_pheroNid() const {
     return pheroNid;
 }
@@ -109,6 +116,10 @@ bool Place::estPlusProcheNid(Place p1, Place p2){
         throw invalid_argument("Il n'y a pas de nid ici ptn");
     }
 }
+bool Place::estPlusLoinNid(Place p1, Place p2){
+    return !estPlusProcheNid(p1,p2);
+}
+
 
 
 
@@ -168,10 +179,11 @@ void placeFourmis(Grille &g, vector<Fourmis> f){
 
 Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid){
     Grille res = Grille(20); //mettre variable globale si possible
+    //res.listeFourmis = creeTabFourmis(f);
     placeFourmis(res,f);
     placeSucre(res,ensSucre);
     placeNid(res, ensNid);
-    //penser à linéariser (tache pour raph à 4h du matin)
+    res.linearisePheroNid();
     return res;
 }
 
@@ -192,6 +204,17 @@ void Grille::linearisePheroNid() {
         rangePlace(p);
     }
 }
+
+void Grille::Simulation(){
+    for(int i=0;i<TAILLEGRILLE;i++){
+        for(int j=0;j<TAILLEGRILLE;j++){
+            Place tmp = get_place(i+j);
+            if(tmp.)
+        }
+    }
+}
+
+
 
 TEST_CASE("Tests la classe Place") {
     Place p(Coord(0,0));

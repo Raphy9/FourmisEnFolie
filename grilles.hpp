@@ -10,9 +10,12 @@ class Place{
         int get_numFourmi() const;
         bool get_contientSucre() const;
         bool get_contientNid() const;
+        bool get_contientNid(int colonie);
+        bool get_contientFourmi();
         float get_pheroSucre() const;
         float get_pheroNid() const;
         bool get_estSurUnePiste() const;
+        bool get_estSurUnePiste(int colonie) const;
         void poseSucre();
         void enleveSucre();
         void poseNid();
@@ -26,7 +29,7 @@ class Place{
         //Méthodes
         bool estVide();
         bool estPlusProcheNid(Place p1, Place p2);
-        
+        bool estPlusLoinNid(Place p1, Place p2);
     private :
         //Attribut
         Coord coord = Coord(0,0);
@@ -35,8 +38,8 @@ class Place{
         int numFourmi;
         bool contientSucre;
         bool contientNid;
-        vector<Place> listePlace; //Grille
-};
+        int numCol; //-1 si ya rien, num colonie sinon
+    };
 
 class Grille{
     public :
@@ -45,8 +48,10 @@ class Grille{
         Place chargePlace(Coord c);
         void rangePlace(Place p);
         void linearisePheroNid();
+        vector<Fourmis> listeFourmis;
     private :
         vector<Place> listePlace;
+
 };
 //Fonctions skizo
 int coord_to_ind(Coord c);

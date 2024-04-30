@@ -29,3 +29,5 @@ class Fourmis{
 
 
 };
+
+vector<Fourmis> creeTabFourmis(EnsCoord e);
