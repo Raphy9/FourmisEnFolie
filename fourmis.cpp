@@ -1,5 +1,4 @@
 #include "fourmis.hpp"
-#include "doctest.h"
 
 //CLASSE FOURMI
 
@@ -8,6 +7,7 @@ Fourmis::Fourmis(Coord c, int ind){
     coord = c;
     num = ind;
     porteSucre = false;
+    enVie = true;
 }
 
 //Getter Setters
@@ -19,6 +19,15 @@ int Fourmis::get_num() const {
     return num;
 }
 
+bool Fourmis::chercheSucre(){
+    return !porteSucre;
+}
+bool Fourmis::rentreNid(){
+    return porteSucre;
+}
+bool Fourmis::estVivante(){
+    return enVie;
+}
 bool Fourmis::get_porteSucre() const {
     return porteSucre;
 }

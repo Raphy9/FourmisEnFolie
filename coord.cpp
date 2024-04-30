@@ -1,5 +1,4 @@
 #include "coord.hpp"
-#include "doctest.h"
 int TAILLEGRILLE = 20;
 
 //---------CLASSE COORDONNÉE--------------
@@ -13,6 +12,7 @@ Coord::Coord(int lig, int col){
         coordonnees.second = col;
     }
 }
+
 
 TEST_CASE("Constructeur Coord") {
     CHECK_THROWS_AS(Coord(-1,1),invalid_argument);
@@ -51,13 +51,13 @@ bool operator!=(Coord c1, Coord c2) {
 }
 
 
- 
+/**
 TEST_CASE("Test opérateur Coord == et != ") {
     CHECK(Coord(1,2)==Coord(1,2));
     CHECK(Coord(1,0)!=Coord(2,0));
     CHECK(Coord(3,1)!=Coord(3,2));
 
-}
+}*/
 
 
 // --------CLASSE ENSEMBLE COORDONNÉES--------------

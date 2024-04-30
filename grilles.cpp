@@ -33,6 +33,10 @@ Place::Place(Coord c){
 Coord Place::get_coord() const {
     return coord;
 }
+int Place::get_numFourmi() const {
+    return numFourmi;
+}
+
 
 bool Place::get_contientSucre() const {
     return contientSucre;
@@ -49,7 +53,9 @@ bool Place::get_estSurUnePiste() const {
 float Place::get_pheroNid() const {
     return pheroNid;
 }
-
+float Place::get_pheroSucre() const {
+    return pheroSucre;
+}
 
 
 void Place::poseSucre(){
@@ -167,9 +173,6 @@ Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid){
     placeNid(res, ensNid);
     //penser à linéariser (tache pour raph à 4h du matin)
     return res;
-
-
-
 }
 
 
@@ -190,7 +193,54 @@ void Grille::linearisePheroNid() {
     }
 }
 
+TEST_CASE("Tests la classe Place") {
+    Place p(Coord(0,0));
 
+    // Tests poseSucre et get_contientSucre"
+    p.poseSucre();
+    CHECK(p.get_contientSucre() == true);
+    p.enleveSucre();
+    CHECK(p.get_contientSucre() == false);
+
+    //Tests poseNid et get_contientNid
+    
+
+    //Tests poseFourmi et enleveFourmi
+    Fourmis f(Coord(0,0), 1);
+    p.poseFourmi(f);
+    CHECK_FALSE(p.estVide());
+    p.enleveFourmi();
+    CHECK(p.estVide());
+    //Tests poseNid et get_contientNid
+    p.poseNid();
+    CHECK(p.get_contientNid() == true);
+    
+
+    //Tests estPlusProcheNid
+    Place p1(Coord(1,1));
+    Place p2(Coord(2,2));
+    CHECK(p.estPlusProcheNid(p1, p2));
+    CHECK_THROWS_AS(p1.estPlusProcheNid(p1, p2),invalid_argument);
+
+}
+
+TEST_CASE("Tests de la classe Grille") {
+    Grille g(TAILLEGRILLE);
+    vector<Fourmis> f = {Fourmis(Coord(0,0), 1)};
+    EnsCoord ensSucre =  {{Coord(1,1)}};
+    EnsCoord ensNid = {{Coord(2,2)}};
+
+    //Tests initialiseGrille
+    Grille res = initialiseGrille(f, ensSucre, ensNid);
+    CHECK(res.get_place(coord_to_ind(ensSucre.ieme(0))).get_contientSucre() == true);
+    CHECK(res.get_place(coord_to_ind(ensNid.ieme(0))).get_contientNid() == true);
+    CHECK_FALSE(res.get_place(coord_to_ind(f[0].get_coord())).estVide());
+
+    // Tests linearisePheroNid"
+    //g.linearisePheroNid();
+    //CHECK(g.get_place(0).get_pheroNid() == 1/20.0);
+    
+}
 
 
 

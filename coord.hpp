@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib> 
+#include "doctest.h"
 using namespace std;
 
 

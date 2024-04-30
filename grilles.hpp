@@ -7,8 +7,10 @@ class Place{
         Place(Coord c);
         //Getters et setters
         Coord get_coord() const;
+        int get_numFourmi() const;
         bool get_contientSucre() const;
         bool get_contientNid() const;
+        float get_pheroSucre() const;
         float get_pheroNid() const;
         bool get_estSurUnePiste() const;
         void poseSucre();
@@ -51,3 +53,5 @@ int coord_to_ind(Coord c);
 void deplaceFourmi(Fourmis f, Place &p1, Place &p2);
 void placeNid(Grille &g,EnsCoord c);
 void placeSucre(Grille &g,EnsCoord c);
+
+Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid);

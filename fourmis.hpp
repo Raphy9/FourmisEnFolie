@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "coord.hpp"
+#include "doctest.h"
 
 class Fourmis{
     public :
@@ -13,6 +14,9 @@ class Fourmis{
         void prendSucre();
         void poseSucre();
         void deplace(Coord c);
+        bool chercheSucre();
+        bool rentreNid();
+        bool estVivante();
 
 
     //Raphy92 propose qu'on laisse le commentaire pour dire qu'on fait
@@ -21,6 +25,7 @@ class Fourmis{
         Coord coord = Coord(0,0);
         int num;
         bool porteSucre;
+        bool enVie;
 
 
 };
