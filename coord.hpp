@@ -16,8 +16,10 @@ class Coord {
 
 class EnsCoord {
     public :
+        //Constructeurs
         EnsCoord();
         EnsCoord(vector<Coord> t);
+        //Getters et setters
         vector<Coord> get_ens_coordonnees() const;
         bool contient(Coord c) const;
         void ajoute(Coord c);
@@ -25,6 +27,7 @@ class EnsCoord {
         bool estVide() const;
         int taille() const;
         Coord ieme(int n) const;
+        //Fonctions
         Coord choixHasard() const;
         void tri();
     private :
@@ -33,4 +36,7 @@ class EnsCoord {
 };
 
 EnsCoord voisines(Coord c);
+std::ostream& operator<< (std::ostream& out, Coord a);
+bool operator==(Coord c1, Coord c2);
+bool operator!=(Coord c1, Coord c2);
 

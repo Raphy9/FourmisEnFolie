@@ -1,5 +1,5 @@
 #include "fourmis.hpp"
-
+#include "doctest.h"
 
 //CLASSE FOURMI
 
@@ -43,4 +43,30 @@ vector<Fourmis> creeTabFourmis(EnsCoord e){
     for(int i=0;i<e.taille();i++){
         res.push_back(Fourmis(e.ieme(i),i));
     } return res;
+}
+
+TEST_CASE("Fourmis") {
+    
+    vector<Coord> coordFourmis = {Coord(1,1)};
+    EnsCoord ensCoordFourmis = coordFourmis;
+    vector<Fourmis> tabFourmis = creeTabFourmis(ensCoordFourmis);
+    Fourmis fourmiTest = tabFourmis[0];
+
+    CHECK(fourmiTest.get_coord() == Coord(1,1));
+    CHECK(fourmiTest.get_num() == 0);
+    CHECK_FALSE(fourmiTest.get_porteSucre());
+
+    fourmiTest.deplace(Coord(2,2));
+    CHECK(fourmiTest.get_coord() == Coord(2,2));
+
+    fourmiTest.prendSucre();
+    CHECK(fourmiTest.get_porteSucre());
+
+    CHECK_THROWS_AS(fourmiTest.deplace(Coord(2,-1)), invalid_argument);
+    fourmiTest.deplace(Coord(2,3));
+    CHECK( (fourmiTest.get_coord()) == Coord(2,3));
+
+    fourmiTest.poseSucre();
+    CHECK_FALSE(fourmiTest.get_porteSucre());
+    
 }
