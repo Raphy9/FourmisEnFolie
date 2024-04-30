@@ -1,17 +1,7 @@
 #include "grilles.hpp"
+#include "doctest.h"
 
 
-//Fonctions
-
-void deplaceFourmi(Fourmis f, Place &p1, Place &p2){
-    p2.poseFourmi(f);
-    p1.enleveFourmi();
-}
-
-
-int coord_to_ind(Coord c) {
-    return c.get_coordonnees().first + c.get_coordonnees().second;
-}
 
 //----------CLASSE PLACE-------------
 
@@ -106,6 +96,8 @@ bool Place::estVide(){
     return numFourmi==-1 and !contientNid and !contientSucre;
 }
 
+
+//Fonctions 
 bool Place::estPlusProcheNid(Place p1, Place p2){
     if(contientNid){
         pair<int,int> c1 = p1.get_coord().get_coordonnees();
@@ -150,8 +142,6 @@ Place Grille::get_place(int ind){
     return listePlace[ind];
 }
 
-
-//Fonctions
 void placeNid(Grille &g,EnsCoord c){
     for(auto& elem : c.get_ens_coordonnees()){
         Place a = g.chargePlace(elem);
@@ -178,8 +168,7 @@ void placeFourmis(Grille &g, vector<Fourmis> f){
 }
 
 Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid){
-    Grille res = Grille(20); //mettre variable globale si possible
-    //res.listeFourmis = creeTabFourmis(f);
+    Grille res = Grille(TAILLEGRILLE);
     placeFourmis(res,f);
     placeSucre(res,ensSucre);
     placeNid(res, ensNid);
@@ -187,6 +176,7 @@ Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid){
     return res;
 }
 
+//Fonctions
 
 void Grille::linearisePheroNid() {
     vector<Coord> res;
@@ -194,17 +184,19 @@ void Grille::linearisePheroNid() {
         res.push_back(listePlace[i].get_coord());
     }
     for (auto& c: res) {
-        float phero = chargePlace(c).get_pheroNid() + 1/TAILLEGRILLE;
-        float n;
-        for (Coord &cv: voisines(c).get_ens_coordonnees()) {
-            n = max(phero, chargePlace(cv).get_pheroNid());
+        if(chargePlace(c).get_pheroNid()<1){
+            float phero = chargePlace(c).get_pheroNid() + 1/TAILLEGRILLE;
+            float m = phero;
+            for (Coord &cv: voisines(c).get_ens_coordonnees()) {
+                if(chargePlace(cv).get_pheroNid()>m) m = chargePlace(cv).get_pheroNid();
+            }Place p = chargePlace(c);
+            p.posePheroNid(m - 1/TAILLEGRILLE);
+            rangePlace(p);
         }
-        Place p = chargePlace(c);
-        p.posePheroNid(n - 1/TAILLEGRILLE);
-        rangePlace(p);
+        
     }
 }
-
+/**
 void Grille::Simulation(){
     for(int i=0;i<TAILLEGRILLE;i++){
         for(int j=0;j<TAILLEGRILLE;j++){
@@ -212,9 +204,19 @@ void Grille::Simulation(){
             if(tmp.)
         }
     }
+}*/
+
+//Fonctions
+
+void deplaceFourmi(Fourmis f, Place &p1, Place &p2){
+    p2.poseFourmi(f);
+    p1.enleveFourmi();
 }
 
 
+int coord_to_ind(Coord c) {
+    return c.get_coordonnees().first*TAILLEGRILLE + c.get_coordonnees().second;
+}
 
 TEST_CASE("Tests la classe Place") {
     Place p(Coord(0,0));
@@ -250,11 +252,12 @@ TEST_CASE("Tests la classe Place") {
 TEST_CASE("Tests de la classe Grille") {
     Grille g(TAILLEGRILLE);
     vector<Fourmis> f = {Fourmis(Coord(0,0), 1)};
-    EnsCoord ensSucre =  {{Coord(1,1)}};
+    EnsCoord ensSucre =  {{Coord(1,1),Coord(2,2)}};
     EnsCoord ensNid = {{Coord(2,2)}};
 
     //Tests initialiseGrille
     Grille res = initialiseGrille(f, ensSucre, ensNid);
+    
     CHECK(res.get_place(coord_to_ind(ensSucre.ieme(0))).get_contientSucre() == true);
     CHECK(res.get_place(coord_to_ind(ensNid.ieme(0))).get_contientNid() == true);
     CHECK_FALSE(res.get_place(coord_to_ind(f[0].get_coord())).estVide());

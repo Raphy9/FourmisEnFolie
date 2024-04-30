@@ -1,7 +1,7 @@
 #include "grilles.hpp"
 extern int TAILLEGRILLE;
 
-void affiche(Grille g);
+void affiche(Grille g,bool debug);
 
 
 

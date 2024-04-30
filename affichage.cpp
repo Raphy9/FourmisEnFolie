@@ -5,6 +5,7 @@
 #include <sstream>      // pour ostringstream
 #include <fstream>      // pour ofstream
 #include <string>
+#include "doctest.h"
 using namespace std;
 // variable globale permettant de creer des noms de fichiers differents
 int compteurFichier = 0;
@@ -34,13 +35,15 @@ void affiche(Grille g,bool debug){
             } else if(tmp.get_contientNid()){
                 fic << 254 << " " << 231 << " " << 71 << "    ";
 
-            } else if(tmp.get_pheroNid() and debug){
-                fic << 254 << " " << 231 - int(tmp.get_pheroNid())*5  << " " << 71 << "    ";
-            } else if(tmp.get_pheroSucre() and debug){
-                fic << 255 - int(tmp.get_pheroSucre())*5 << " " << 255 << " "<< 255 << "    ";
+            } else if(tmp.get_pheroNid()>0 and debug){
+                fic << 254 << " " << 200 - (1 -tmp.get_pheroNid())*100  << " " << 71 << "    ";
+            } else if(tmp.get_pheroSucre()>0){
+                fic << 210 << " " << 210  << " "<< 210 << "    ";
+            }else{
+                fic << 18 << " " << 12 << " " << 60 << "    ";
             }
         } fic << endl;
-    }
+    } fic.close();
 
 
 

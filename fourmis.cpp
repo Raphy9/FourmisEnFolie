@@ -1,5 +1,5 @@
 #include "fourmis.hpp"
-
+#include "doctest.h"
 //CLASSE FOURMI
 
 // Constructeurs

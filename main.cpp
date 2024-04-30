@@ -1,10 +1,21 @@
 #include "affichage.hpp"
-int main(){
-    vector<Fourmis> f = {Fourmis(Coord(5,10),1),Fourmis(Coord(12,14),2)};
-    vector<Coord> s = {Coord(4,3), Coord(6,18)};
-    vector<Coord> n = {Coord(2,2),Coord(5,6)};
+#define DOCTEST_CONFIG_IMPLEMENT
+#include "doctest.h"
+int main(int argc, char **argv){
+    doctest::Context context(argc,argv);
+    int res = context.run();
+    context.setAsDefaultForAssertsOutOfTestCases();
+    if(context.shouldExit()) return res;
+
+
+    vector<Fourmis> f;
+    vector<Coord> s;
+    vector<Coord> n = {Coord(3,3)};
     EnsCoord ensSucre = EnsCoord(s);
     EnsCoord ensNid = EnsCoord(n);
-    //Grille g = initialiseGrille(f,s,n);
-    cout << "hehehehe";
+    Grille g = initialiseGrille(f,s,n);
+    affiche(g,true);
+    cout << g.chargePlace(Coord(1,1)).get_pheroNid();
+
+    
 }
