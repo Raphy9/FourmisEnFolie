@@ -6,17 +6,19 @@
 class Fourmis{
     public :
         //Constructeur
-        Fourmis(Coord c, int ind);
+        Fourmis(Coord c, int ind, int colo);
         //Getters et setters
         Coord get_coord() const;
         int get_num() const;
         bool get_porteSucre() const ;
+        int get_col() const ;
         void prendSucre();
         void poseSucre();
         void deplace(Coord c);
         bool chercheSucre();
         bool rentreNid();
         bool estVivante();
+        void set_estVivante();
 
 
     //Raphy92 propose qu'on laisse le commentaire pour dire qu'on fait
@@ -26,8 +28,12 @@ class Fourmis{
         int num;
         bool porteSucre;
         bool enVie;
+        int col;
 
 
 };
 
-vector<Fourmis> creeTabFourmis(EnsCoord e);
+vector<Fourmis> creeTabFourmis(EnsCoord e, vector<int> colo);
+Fourmis chercheFourmis(vector<Fourmis> tabf, Coord c);
+Fourmis chercheFourmis(vector<Fourmis> tabf, int ind);
+void rangeFourmi(vector<Fourmis> &tabf, Fourmis f);

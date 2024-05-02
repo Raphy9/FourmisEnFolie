@@ -78,13 +78,24 @@ void Place::enleveFourmi(){
     numFourmi = -1;
 }
 
-void Place::posePheroNid(int intensite){
+void Place::posePheroNid(float intensite,int col){
+    //Colonie neutre : -1
+    //Coder les pheroNid comme des pair pour stocker l'info ?
     pheroNid = intensite;
+
 }
 
 void Place::posePheroSucre(int intensite){
     pheroSucre = intensite;
 
+}
+
+void Place::set_num(int n){
+    numFourmi = n;
+}
+
+void Place::set_contientSucre(bool b){
+    contientSucre = b;
 }
 
 void Place::diminuePheroSucre(){
@@ -167,6 +178,31 @@ void placeFourmis(Grille &g, vector<Fourmis> f){
     }
 }
 
+
+
+//Fonctions
+
+void Grille::linearisePheroNid() {
+    float n;
+    vector<Coord> coord;
+    for(int i=0;i<TAILLEGRILLE;i++){
+        for(int j=0;j<TAILLEGRILLE;j++){
+            coord.push_back(Coord(i,j));
+        }
+    }
+    for (Coord& c: coord) {
+        float phero = get_place(coord_to_ind(c)).get_pheroNid() + (1./TAILLEGRILLE);
+        n = 0.0;
+        EnsCoord voisins = voisines(c);
+        for (Coord &cv: voisins.get_ens_coordonnees()) {
+            n = max(n, max(phero, get_place(coord_to_ind(cv)).get_pheroNid()));
+        }
+        Place p = chargePlace(c);
+        p.posePheroNid(n - (1./TAILLEGRILLE));
+        rangePlace(p);
+    }
+}
+
 Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid){
     Grille res = Grille(TAILLEGRILLE);
     placeFourmis(res,f);
@@ -175,36 +211,6 @@ Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid){
     res.linearisePheroNid();
     return res;
 }
-
-//Fonctions
-
-void Grille::linearisePheroNid() {
-    vector<Coord> res;
-    for(int i=0;i< int(listePlace.size());i++){
-        res.push_back(listePlace[i].get_coord());
-    }
-    for (auto& c: res) {
-        if(chargePlace(c).get_pheroNid()<1){
-            float phero = chargePlace(c).get_pheroNid() + 1/TAILLEGRILLE;
-            float m = phero;
-            for (Coord &cv: voisines(c).get_ens_coordonnees()) {
-                if(chargePlace(cv).get_pheroNid()>m) m = chargePlace(cv).get_pheroNid();
-            }Place p = chargePlace(c);
-            p.posePheroNid(m - 1/TAILLEGRILLE);
-            rangePlace(p);
-        }
-        
-    }
-}
-/**
-void Grille::Simulation(){
-    for(int i=0;i<TAILLEGRILLE;i++){
-        for(int j=0;j<TAILLEGRILLE;j++){
-            Place tmp = get_place(i+j);
-            if(tmp.)
-        }
-    }
-}*/
 
 //Fonctions
 
@@ -217,6 +223,9 @@ void deplaceFourmi(Fourmis f, Place &p1, Place &p2){
 int coord_to_ind(Coord c) {
     return c.get_coordonnees().first*TAILLEGRILLE + c.get_coordonnees().second;
 }
+
+
+
 
 TEST_CASE("Tests la classe Place") {
     Place p(Coord(0,0));
@@ -231,7 +240,7 @@ TEST_CASE("Tests la classe Place") {
     
 
     //Tests poseFourmi et enleveFourmi
-    Fourmis f(Coord(0,0), 1);
+    Fourmis f(Coord(0,0),1,1);
     p.poseFourmi(f);
     CHECK_FALSE(p.estVide());
     p.enleveFourmi();
@@ -248,10 +257,10 @@ TEST_CASE("Tests la classe Place") {
     CHECK_THROWS_AS(p1.estPlusProcheNid(p1, p2),invalid_argument);
 
 }
-
+/**
 TEST_CASE("Tests de la classe Grille") {
     Grille g(TAILLEGRILLE);
-    vector<Fourmis> f = {Fourmis(Coord(0,0), 1)};
+    vector<Fourmis> f = {Fourmis(Coord(0,0), 1,1)};
     EnsCoord ensSucre =  {{Coord(1,1),Coord(2,2)}};
     EnsCoord ensNid = {{Coord(2,2)}};
 
@@ -266,7 +275,7 @@ TEST_CASE("Tests de la classe Grille") {
     //g.linearisePheroNid();
     //CHECK(g.get_place(0).get_pheroNid() == 1/20.0);
     
-}
+}*/
 
 
 

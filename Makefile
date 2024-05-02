@@ -1,12 +1,16 @@
 
 all : main
 
-main : main.o coord.o fourmis.o grilles.o affichage.o
+main : main.o coord.o fourmis.o grilles.o affichage.o simulation.o
 	g++ -o main main.o coord.o fourmis.o grilles.o affichage.o
 
 
 main.o : main.cpp 
 	g++ -std=c++11 -Wall -c main.cpp
+
+simulation.o : simulation.hpp simulation.cpp
+	g++ -std=c++11 -Wall -c simulation.cpp
+	
 affichage.o: affichage.hpp affichage.cpp
 	g++ -std=c++11 -Wall -c affichage.cpp
 

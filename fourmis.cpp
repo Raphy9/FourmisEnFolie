@@ -3,9 +3,10 @@
 //CLASSE FOURMI
 
 // Constructeurs
-Fourmis::Fourmis(Coord c, int ind){
+Fourmis::Fourmis(Coord c, int ind,int colo){
     coord = c;
     num = ind;
+    col = colo;
     porteSucre = false;
     enVie = true;
 }
@@ -17,6 +18,10 @@ Coord Fourmis::get_coord() const {
 }
 int Fourmis::get_num() const {
     return num;
+}
+
+int Fourmis::get_col() const{
+    return col;
 }
 
 bool Fourmis::chercheSucre(){
@@ -45,20 +50,50 @@ void Fourmis::deplace(Coord c){
     coord = c;
 }
 
+void Fourmis::set_estVivante(){
+    enVie = false;
+}
 
 //Fonctions 
-vector<Fourmis> creeTabFourmis(EnsCoord e){
+vector<Fourmis> creeTabFourmis(EnsCoord e,vector<int> colo){
     vector<Fourmis> res = {};
+    if(e.taille() != int(colo.size())){
+        throw invalid_argument("La taille de l'ensemble des coordonnées n'est pas la meme que le vect colo ! ");
+    }
     for(int i=0;i<e.taille();i++){
-        res.push_back(Fourmis(e.ieme(i),i));
+        res.push_back(Fourmis(e.ieme(i),i,colo[i]));
     } return res;
+}
+
+Fourmis chercheFourmis(vector<Fourmis> tabf, Coord c){
+    for (auto& f : tabf){
+        if(f.get_coord()==c){
+            return f;
+        }
+    } throw invalid_argument("Cette fourmis n'existe pas");
+}
+Fourmis chercheFourmis(vector<Fourmis> tabf, int ind){
+    for (auto& f : tabf){
+        if(f.get_num()==ind){
+            return f;
+        }
+    } throw invalid_argument("Cette fourmis n'existe pas");
+}
+void rangeFourmi(vector<Fourmis> &tabf, Fourmis f){
+    for(int i=0;i< int(tabf.size());i++){
+        if (f.get_coord() == tabf[i].get_coord()){
+            tabf[i] = f;
+            return;
+        }
+    }
 }
 
 TEST_CASE("Fourmis") {
     
     vector<Coord> coordFourmis = {Coord(1,1)};
     EnsCoord ensCoordFourmis = coordFourmis;
-    vector<Fourmis> tabFourmis = creeTabFourmis(ensCoordFourmis);
+    vector<int> tabC {{1}};
+    vector<Fourmis> tabFourmis = creeTabFourmis(ensCoordFourmis,tabC);
     Fourmis fourmiTest = tabFourmis[0];
 
     CHECK(fourmiTest.get_coord() == Coord(1,1));

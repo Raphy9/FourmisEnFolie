@@ -30,6 +30,7 @@ pair<int,int> Coord::get_coordonnees() const {
 }
 
 
+
 //Surcharges 
 std::ostream& operator<< (std::ostream& out, Coord a){
     pair<int,int> c = a.get_coordonnees();
