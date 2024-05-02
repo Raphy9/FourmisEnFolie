@@ -1,18 +1,18 @@
 #include "simulation.hpp"
 
-void simulation(Grille &g, vector<Fourmis> &tabFourmis){
+void simulation(Grille &g){
     //Permet de modifier la grille - Simule une itération
 
     //On s'occupe de toutes les fourmis.
-    for(auto& f : tabFourmis){
+    for(auto& f : TABFOURMI){
         Coord p2 = voisines(f.get_coord()).choixHasard();
         Place p = g.get_place(coord_to_ind(p2));
 
         //CONDITION 1 : f tue f2
-        if(f.estVivante() and p.get_contientFourmi() and chercheFourmis(tabFourmis,p2).get_col()){
-            Fourmis tmp = chercheFourmis(tabFourmis,p2);
+        if(f.estVivante() and p.get_contientFourmi() and chercheFourmis(TABFOURMI,p2).get_col()!=f.get_col()){
+            Fourmis tmp = chercheFourmis(TABFOURMI,p2);
             tmp.set_estVivante();
-            rangeFourmi(tabFourmis,tmp);
+            rangeFourmi(TABFOURMI,tmp);
             Place tmpb = g.chargePlace(p2);
             tmpb.set_num(-1);
             g.rangePlace(tmpb);

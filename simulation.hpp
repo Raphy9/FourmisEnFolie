@@ -1,3 +1,3 @@
 #include "affichage.hpp"
-
-void simulation(Grille &g, vector<Fourmis> tabFourmis);
+extern  vector<Fourmis> TABFOURMI;
+void simulation(Grille &g);

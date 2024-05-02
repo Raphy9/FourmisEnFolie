@@ -11,8 +11,10 @@
 
 Place::Place(Coord c){
     coord = c;
-    pheroSucre = 0;
-    pheroNid = 0;
+    pheroSucre.first = 0;
+    pheroSucre.second = -1;
+    pheroNid.first = 0;
+    pheroNid.second = -1;
     numFourmi = -1;
     contientNid = false;
     contientSucre = false;
@@ -37,20 +39,23 @@ bool Place::get_contientNid() const {
     return contientNid;
 }
 
-bool Place::get_estSurUnePiste() const {
-    return pheroSucre>0;
-}
+
 
 bool Place::get_estSurUnePiste(int colonie) const {
-    return pheroSucre>0 and colonie==numCol;
+    if(numFourmi!=-1){
+        return chercheFourmis(TABFOURMI,numFourmi).get_col() == pheroSucre.second and pheroSucre.first >0;
+
+    } return false;
 }
 bool Place::get_contientFourmi(){
     return numFourmi!=-1;
 }
-float Place::get_pheroNid() const {
+pair<float,int> Place::get_pheroNid() const {
     return pheroNid;
 }
-float Place::get_pheroSucre() const {
+
+
+pair<int,int> Place::get_pheroSucre() const {
     return pheroSucre;
 }
 
@@ -85,7 +90,7 @@ void Place::posePheroNid(float intensite,int col){
 
 }
 
-void Place::posePheroSucre(int intensite){
+void Place::posePheroSucre(int intensite,int col){
     pheroSucre = intensite;
 
 }

@@ -1,6 +1,7 @@
 #include "fourmis.hpp"
 #include <cmath>
 extern int TAILLEGRILLE;
+extern vector<Fourmis> TABFOURMI;
 class Place{
     public : 
         //Constructeur
@@ -12,9 +13,8 @@ class Place{
         bool get_contientNid() const;
         bool get_contientNid(int colonie);
         bool get_contientFourmi();
-        float get_pheroSucre() const;
-        float get_pheroNid() const;
-        bool get_estSurUnePiste() const;
+        pair<int,int> get_pheroSucre() const;
+        pair<float,int>  get_pheroNid() const;
         bool get_estSurUnePiste(int colonie) const;
         void set_num(int n);
         void set_contientSucre(bool b);
@@ -35,8 +35,8 @@ class Place{
     private :
         //Attribut
         Coord coord = Coord(0,0);
-        float pheroSucre;
-        float pheroNid;
+        pair<int,int> pheroSucre;
+        pair<float,int> pheroNid;
         int numFourmi;
         bool contientSucre;
         bool contientNid;
