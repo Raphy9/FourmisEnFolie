@@ -62,36 +62,44 @@ pair<int,int> Place::get_pheroSucre() const {
 
 void Place::poseSucre(){
     contientSucre = true;
-    pheroSucre = 1;
+    pheroSucre.first = 100; //je garde ce que tavais mis heinn hihiihihihiihhi ALEDD
 }
 
 void Place::enleveSucre(){
     contientSucre = false;
 }
 
-void Place::poseNid(){
+void Place::poseNid(int col){
     contientNid = true;
-    pheroNid = 1;
+    pheroNid.first = 1;
+    pheroNid.second = col;
 }
 
 
 void Place::poseFourmi(Fourmis f){
-    f.deplace(coord);
-    numFourmi = f.get_num();
+    if (numFourmi == -1) {
+        f.deplace(coord);
+        numFourmi = f.get_num();
+        numCol = f.get_col();
+        //f.set_col(col);
+    }
 }
 void Place::enleveFourmi(){
     numFourmi = -1;
+    numCol = -1;
 }
 
 void Place::posePheroNid(float intensite,int col){
     //Colonie neutre : -1
-    //Coder les pheroNid comme des pair pour stocker l'info ?
-    pheroNid = intensite;
+    //Coder les pheroNid comme des pair pour stocker l'info ? oui.
+    pheroNid.first = intensite;
+    pheroNid.second = col;
 
 }
 
 void Place::posePheroSucre(int intensite,int col){
-    pheroSucre = intensite;
+    pheroSucre.first = intensite;
+    pheroSucre.second = col;
 
 }
 
@@ -104,14 +112,17 @@ void Place::set_contientSucre(bool b){
 }
 
 void Place::diminuePheroSucre(){
-    //Diminue par défaut à 1
-    pheroSucre--;
+    //Diminue par défaut de 1
+    pheroSucre.first--;
 }
 
 bool Place::estVide(){
     return numFourmi==-1 and !contientNid and !contientSucre;
 }
 
+int Place::get_colFourmi() {
+    return numCol;
+}
 
 //Fonctions 
 bool Place::estPlusProcheNid(Place p1, Place p2){
@@ -158,11 +169,13 @@ Place Grille::get_place(int ind){
     return listePlace[ind];
 }
 
-void placeNid(Grille &g,EnsCoord c){
+void placeNid(Grille &g,EnsCoord c, int col){
     for(auto& elem : c.get_ens_coordonnees()){
         Place a = g.chargePlace(elem);
-        a.poseNid();
-        g.rangePlace(a);
+        a.poseNid(col); //ICI FAIRE UNE FONCTION QUI ATTRIBUE UN IND DE COL pour l'exemple j'ai mis col passer en param mais ya des soucis fin bref
+        g.rangePlace(a); // on pourrais enlever la boucle pour regler le soucis mais on aurait du mal a ttribué correctement les coords au nid 
+        // Solution ?? peut etre adapter tout ca avec une paire contenant a la fois l'indice de colonie et les coordonées du nid mais c trop specifique
+        // pour valoir le coup. Donc a voir.
     }
 }
 
@@ -178,7 +191,7 @@ void placeFourmis(Grille &g, vector<Fourmis> f){
     for(auto& elem : f){
         Coord a = elem.get_coord();
         Place tmp = g.get_place(coord_to_ind(a));
-        tmp.poseFourmi(elem);
+        tmp.poseFourmi(elem); //, elem.get_col());
         g.rangePlace(tmp);
     }
 }
@@ -187,7 +200,7 @@ void placeFourmis(Grille &g, vector<Fourmis> f){
 
 //Fonctions
 
-void Grille::linearisePheroNid() {
+void Grille::linearisePheroNid(int col) {
     float n;
     vector<Coord> coord;
     for(int i=0;i<TAILLEGRILLE;i++){
@@ -196,31 +209,41 @@ void Grille::linearisePheroNid() {
         }
     }
     for (Coord& c: coord) {
-        float phero = get_place(coord_to_ind(c)).get_pheroNid() + (1./TAILLEGRILLE);
+        float phero = get_place(coord_to_ind(c)).get_pheroNid().first + (1./TAILLEGRILLE);
         n = 0.0;
         EnsCoord voisins = voisines(c);
         for (Coord &cv: voisins.get_ens_coordonnees()) {
-            n = max(n, max(phero, get_place(coord_to_ind(cv)).get_pheroNid()));
+            n = max(n, max(phero, get_place(coord_to_ind(cv)).get_pheroNid().first));
         }
         Place p = chargePlace(c);
-        p.posePheroNid(n - (1./TAILLEGRILLE));
+        p.posePheroNid(n - (1./TAILLEGRILLE), col);
         rangePlace(p);
     }
 }
 
-Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid){
+Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid, vector<int> tabColonie){
     Grille res = Grille(TAILLEGRILLE);
     placeFourmis(res,f);
     placeSucre(res,ensSucre);
-    placeNid(res, ensNid);
-    res.linearisePheroNid();
+    for(int i = 0; i < int(tabColonie.size()); i++) {
+        placeNid(res, ensNid, tabColonie[i]);               //Probleme de semantique ici les deux nids se voit attribué la meme colonie
+        res.linearisePheroNid(tabColonie[i]);               // la derniere colonie qui est passée dans la putain de boucle de merde sortez moi de la pls
+    }
     return res;
+}
+
+Coord Grille::coordAlea() {
+
+    int i = rand()%TAILLEGRILLE;
+    int j = rand()%TAILLEGRILLE;
+
+    return Coord(i,j);
 }
 
 //Fonctions
 
 void deplaceFourmi(Fourmis f, Place &p1, Place &p2){
-    p2.poseFourmi(f);
+    p2.poseFourmi(f); //, f.get_col());
     p1.enleveFourmi();
 }
 
@@ -231,7 +254,9 @@ int coord_to_ind(Coord c) {
 
 
 
+// Note : Il faudrait refaire les tests de la grille avec les colonies.
 
+/**
 TEST_CASE("Tests la classe Place") {
     Place p(Coord(0,0));
 
@@ -262,6 +287,8 @@ TEST_CASE("Tests la classe Place") {
     CHECK_THROWS_AS(p1.estPlusProcheNid(p1, p2),invalid_argument);
 
 }
+*/
+
 /**
 TEST_CASE("Tests de la classe Grille") {
     Grille g(TAILLEGRILLE);
@@ -280,13 +307,5 @@ TEST_CASE("Tests de la classe Grille") {
     //g.linearisePheroNid();
     //CHECK(g.get_place(0).get_pheroNid() == 1/20.0);
     
-}*/
-
-
-
-
-
-
-
-
-
+}
+*/

@@ -1,5 +1,5 @@
 #include "coord.hpp"
-int TAILLEGRILLE = 20;
+int TAILLEGRILLE = 100;
 #include "doctest.h"
 //---------CLASSE COORDONNÉE--------------
 
@@ -257,7 +257,7 @@ Coord EnsCoord::choixHasard() const {
         throw invalid_argument("remplis stp");
     }
     int a = rand()%(taille());
-    cout << a << endl;
+    //cout << a << endl;
     return ieme(a);
 }
 
@@ -296,15 +296,14 @@ EnsCoord voisines(Coord c){
 
 }
 
-
 TEST_CASE("voisines"){
     Coord a{2,1};
-    Coord b{3,19};
+    Coord b{3,TAILLEGRILLE-1};
     Coord c{0,0};
     //penser à l'ordre des vecteurs
     vector<Coord> tmp1 = {Coord(1,0), Coord(1,1),Coord(1,2), Coord(2,2), Coord(3,2), Coord(3,1), Coord(3,0), Coord(2,0) };
     EnsCoord res1 = tmp1;
-    vector<Coord> tmp2 = {Coord(2, 18), Coord(2, 19), Coord(3, 18), Coord(4, 18), Coord(4, 19) };
+    vector<Coord> tmp2 = {Coord(2, TAILLEGRILLE-2), Coord(2, TAILLEGRILLE-1), Coord(3, TAILLEGRILLE-2), Coord(4, TAILLEGRILLE-2), Coord(4, TAILLEGRILLE-1) };
     EnsCoord res2 = tmp2;
 vector<Coord> tmp3 = {Coord(0, 1), Coord(1, 0), Coord(1, 1) };
     EnsCoord res3 = tmp3;

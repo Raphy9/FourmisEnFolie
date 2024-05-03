@@ -26,18 +26,30 @@ void affiche(Grille g,bool debug){
     for(int i=0;i<TAILLEGRILLE;i++){
         for(int j=0;j<TAILLEGRILLE;j++){
             Place tmp = g.chargePlace(Coord(i,j));
-            if(tmp.get_numFourmi()!=-1){
-                fic << 21 << " " << 36 << " " << 149 << "    ";
+            /**if(tmp.get_numFourmi()!=-1){
+                fic << 21 << " " << 36 << " " << 149 << "    ";  //NE PAS FAIRE CA T ZINZIN si ya pas de fourmis on ira dans le cas qu'est tout en bas
+            }*/
+            // début affichage fourmis
+            // COND A MODIFIER pour 2 colonie differentes
+            if(tmp.get_colFourmi() == 0) { // Ne pas mettre de else
+                //cout << tmp.get_colFourmi() << endl;
+                fic << 158 << " " << 250 << " " << 250 << "    "; // bleu clair cyan je sais pas trop
+            } else if (tmp.get_colFourmi() == 1) {
+                //cout << tmp.get_colFourmi() << endl;
+                fic << 243 << " " << 97 << " " << 255 << "    "; // rose
+            }
+            // fin 
+            if(tmp.get_contientNid() and tmp.get_pheroNid().second == 0){ //Bleu Foncé
+                fic << 10 << " " << 94 << " " << 218 << "    ";
+            } else if(tmp.get_contientNid() and tmp.get_pheroNid().second == 1){ //Rouge
+                fic << 255 << " " << 0 << " " << 0 << "    ";
             }
             else if(tmp.get_contientSucre()){
-                fic << 255 << " " << 255 << " " << 255 << "    ";
+                fic << 255 << " " << 255 << " " << 255 << "    "; // blanc
 
-            } else if(tmp.get_contientNid()){
-                fic << 254 << " " << 231 << " " << 71 << "    ";
-
-            } else if(tmp.get_pheroNid()>0 and debug){
-                fic << 254 << " " << 200 - (1 -tmp.get_pheroNid())*100  << " " << 71 << "    ";
-            } else if(tmp.get_pheroSucre()>0){
+            }  else if(tmp.get_pheroNid().first>0 and debug){
+                fic << 254 << " " << 200 - (1 -tmp.get_pheroNid().first)*100  << " " << 71 << "    ";
+            } else if(tmp.get_pheroSucre().first>0 and debug){
                 fic << 210 << " " << 210  << " "<< 210 << "    ";
             }else{
                 fic << 18 << " " << 12 << " " << 60 << "    ";

@@ -6,12 +6,13 @@
 class Fourmis{
     public :
         //Constructeur
-        Fourmis(Coord c, int ind, int colo);
+        Fourmis(Coord c, int ind, int colo=-1);
         //Getters et setters
         Coord get_coord() const;
         int get_num() const;
         bool get_porteSucre() const ;
         int get_col() const ;
+        void set_col(int colo);
         void prendSucre();
         void poseSucre();
         void deplace(Coord c);

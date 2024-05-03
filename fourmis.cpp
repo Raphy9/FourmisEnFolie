@@ -24,6 +24,10 @@ int Fourmis::get_col() const{
     return col;
 }
 
+void Fourmis::set_col(int colo) {
+    col = colo;
+}
+
 bool Fourmis::chercheSucre(){
     return !porteSucre;
 }
