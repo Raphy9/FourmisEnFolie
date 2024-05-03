@@ -20,6 +20,7 @@ class Fourmis{
         bool rentreNid();
         bool estVivante();
         void set_estVivante();
+        
 
 
     //Raphy92 propose qu'on laisse le commentaire pour dire qu'on fait

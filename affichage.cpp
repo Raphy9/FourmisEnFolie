@@ -7,9 +7,16 @@
 #include <string>
 #include "doctest.h"
 using namespace std;
+
+
+
 // variable globale permettant de creer des noms de fichiers differents
 int compteurFichier = 0;
-void affiche(Grille g,bool debug){
+//11 colonies max cest assez !!
+vector<vector<vector<int>>> COULEUR = {{{255,0,0},{255,80,80},{255,168,168}},{{255,153,0},{255,93,103},{255,124,178}},{{255,255,0},{255,255,99},{255,255,176}},{{100,255,0},{155,255,90},{205,255,172}},{{0,255,200},{115,254,224},{191,255,241}},{{0,175,255},{111,208,252},{178,230,254}},{{0,0,255},{97,97,255},{178,178,254}},{{255,0,150}, {252,93,187},{254,169,220}}};
+//Logique : plus foncé : nid, moyen clair : fourmis, clair : pheromones
+//Chaque colonie possède sa propre couleur
+void affiche(Grille g, vector<Fourmis> tabf, bool debug){
     //Code RGB Fourmi col1 : rgb(21, 36, 149)
     ostringstream filename;
     // creation d'un nouveau nom de fichier de la forme img347.ppm
@@ -26,30 +33,27 @@ void affiche(Grille g,bool debug){
     for(int i=0;i<TAILLEGRILLE;i++){
         for(int j=0;j<TAILLEGRILLE;j++){
             Place tmp = g.chargePlace(Coord(i,j));
-            /**if(tmp.get_numFourmi()!=-1){
-                fic << 21 << " " << 36 << " " << 149 << "    ";  //NE PAS FAIRE CA T ZINZIN si ya pas de fourmis on ira dans le cas qu'est tout en bas
-            }*/
             // début affichage fourmis
             // COND A MODIFIER pour 2 colonie differentes
-            if(tmp.get_colFourmi() == 0) { // Ne pas mettre de else
-                //cout << tmp.get_colFourmi() << endl;
-                fic << 158 << " " << 250 << " " << 250 << "    "; // bleu clair cyan je sais pas trop
-            } else if (tmp.get_colFourmi() == 1) {
-                //cout << tmp.get_colFourmi() << endl;
-                fic << 243 << " " << 97 << " " << 255 << "    "; // rose
-            }
-            // fin 
-            if(tmp.get_contientNid() and tmp.get_pheroNid().second == 0){ //Bleu Foncé
-                fic << 10 << " " << 94 << " " << 218 << "    ";
-            } else if(tmp.get_contientNid() and tmp.get_pheroNid().second == 1){ //Rouge
-                fic << 255 << " " << 0 << " " << 0 << "    ";
+            if(tmp.get_contientFourmi()){
+                int indf = chercheFourmis(tabf,tmp.get_numFourmi()).get_col();
+                fic << COULEUR[indf][1][0] << " " << COULEUR[indf][1][1] << " " << COULEUR[indf][1][2] << "    ";
+
+            } 
+            else if(tmp.get_contientNid()){
+                int colonie = tmp.getIndColNid();
+                int indn = tmp.get_pheroNid(colonie).second;
+                fic << COULEUR[indn][0][0] << " " << COULEUR[indn][0][1] << " " << COULEUR[indn][0][2] << "    ";
+
             }
             else if(tmp.get_contientSucre()){
                 fic << 255 << " " << 255 << " " << 255 << "    "; // blanc
 
-            }  else if(tmp.get_pheroNid().first>0 and debug){
-                fic << 254 << " " << 200 - (1 -tmp.get_pheroNid().first)*100  << " " << 71 << "    ";
-            } else if(tmp.get_pheroSucre().first>0 and debug){
+            }  
+            else if(tmp.get_pheroNid(0).first>0 and debug){
+                fic << 254 << " " << 200 - (1 -tmp.get_pheroNid(0).first)*100  << " " << 71 << "    ";
+            } 
+            else if(tmp.get_pheroSucre(0).first>0 and debug){
                 fic << 210 << " " << 210  << " "<< 210 << "    ";
             }else{
                 fic << 18 << " " << 12 << " " << 60 << "    ";
