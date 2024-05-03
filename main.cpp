@@ -2,6 +2,8 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "doctest.h"
 
+//pour convertir en gif : convert -scale 300 -delay 10 img*.ppm movie.gif
+
 
 vector<Fourmis> TABFOURMI;
 Grille GRILLE(TAILLEGRILLE,0);
@@ -19,7 +21,7 @@ int main(int argc, char **argv){
     int res = context.run();
     context.setAsDefaultForAssertsOutOfTestCases();
     if(context.shouldExit()) return res;
-    
+    srand(time(0));
     
     
     //10 fourmis appartenant a la colonie i a une position aléatoire
@@ -53,7 +55,7 @@ int main(int argc, char **argv){
     }
     
     //Nombre de nid
-    /**
+    
     vector<Coord> n;
     for(int i = 0; i < 2 ; i++) {
         bool verif = false;
@@ -65,7 +67,7 @@ int main(int argc, char **argv){
             }
         }
         
-    }*/
+    }
     
     
     //Constructeurs
@@ -86,9 +88,7 @@ int main(int argc, char **argv){
 
     }*/
 
-    for(auto& elem : TABFOURMI){
-        cout << elem.get_num() << endl;
-    }
+    
 
     /**
     for(auto elem : TABFOURMI) {
@@ -98,7 +98,7 @@ int main(int argc, char **argv){
     //Affichage
 
     
-    for(int i=0;i<10;i++){
+    for(int i=0;i<100;i++){
         cout << i << "eme iteration" << endl;
         affiche(GRILLE,TABFOURMI,false);
         simulation();

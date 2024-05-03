@@ -78,6 +78,16 @@ Fourmis chercheFourmis(vector<Fourmis> tabf, int ind){
     } throw invalid_argument("Cette fourmis n'existe pas");
 }
 
+TEST_CASE("Cherche fourmis"){
+    Fourmis a(Coord(2,1),0,0);
+    Fourmis b(Coord(2,2),1,1);
+    vector<Fourmis> test = {a,b};
+    CHECK(chercheFourmis(test,0).get_coord() == a.get_coord());
+    CHECK(chercheFourmis(test,1).get_coord() == b.get_coord());
+    CHECK_THROWS_AS(chercheFourmis(test,2),invalid_argument);
+
+}
+
 
 void rangeFourmi(vector<Fourmis> &tabf, Fourmis f){
     for(int i=0;i< int(tabf.size());i++){
@@ -86,6 +96,19 @@ void rangeFourmi(vector<Fourmis> &tabf, Fourmis f){
             return;
         }
     }
+}
+
+TEST_CASE("Range fourmi"){
+    Fourmis a(Coord(2,1),0,0);
+    Fourmis b(Coord(2,2),1,1);
+    vector<Fourmis> test = {a,b};
+    a.set_col(2);
+    b.tue();
+    rangeFourmi(test,a);
+    rangeFourmi(test,b);
+    CHECK(a.get_col()==chercheFourmis(test,a.get_num()).get_col());
+    CHECK(b.estVivante()==chercheFourmis(test,b.get_num()).estVivante());
+
 }
 
 TEST_CASE("Fourmis") {

@@ -382,7 +382,9 @@ Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid){
         } cout << "-------" << endl; */
         
     }
-    
+    cout << "Nombre de fourmis : " << f.size() << endl;
+    cout << "Nombre de sucre : " << ensSucre.taille() << endl;
+    cout << "Nombre de nid/colonie : " << ensNid.taille() << endl;
     return res;
 }
 

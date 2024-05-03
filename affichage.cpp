@@ -34,7 +34,7 @@ void affiche(Grille g, vector<Fourmis> tabf, bool debug){
             Place tmp = g.chargePlace(Coord(i,j));
             // début affichage fourmis
             // COND A MODIFIER pour 2 colonie differentes
-            if(tmp.get_contientFourmi()){
+            if(tmp.get_contientFourmi() and tmp.get_numFourmi()!=-1){
                 int indf = chercheFourmis(tabf,tmp.get_numFourmi()).get_col();
                 fic << COULEUR[indf][1][0] << " " << COULEUR[indf][1][1] << " " << COULEUR[indf][1][2] << "    ";
 
