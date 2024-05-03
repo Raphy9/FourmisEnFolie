@@ -11,9 +11,8 @@ using namespace std;
 
 
 // variable globale permettant de creer des noms de fichiers differents
-int compteurFichier = 0;
-//11 colonies max cest assez !!
-vector<vector<vector<int>>> COULEUR = {{{255,0,0},{255,80,80},{255,168,168}},{{255,153,0},{255,93,103},{255,124,178}},{{255,255,0},{255,255,99},{255,255,176}},{{100,255,0},{155,255,90},{205,255,172}},{{0,255,200},{115,254,224},{191,255,241}},{{0,175,255},{111,208,252},{178,230,254}},{{0,0,255},{97,97,255},{178,178,254}},{{255,0,150}, {252,93,187},{254,169,220}}};
+//11 colonies max cest assez !! {255,153,0}
+vector<vector<vector<int>>> COULEUR = {{{255,0,0},{255,80,80},{255,168,168}},{{255,150,0},{255,255,99},{255,255,176}},{{100,255,0},{155,255,90},{205,255,172}},{{0,255,200},{115,254,224},{191,255,241}},{{0,175,255},{111,208,252},{178,230,254}},{{0,0,255},{97,97,255},{178,178,254}},{{255,0,150}, {252,93,187},{254,169,220}}};
 //Logique : plus foncé : nid, moyen clair : fourmis, clair : pheromones
 //Chaque colonie possède sa propre couleur
 void affiche(Grille g, vector<Fourmis> tabf, bool debug){
@@ -43,6 +42,7 @@ void affiche(Grille g, vector<Fourmis> tabf, bool debug){
             else if(tmp.get_contientNid()){
                 int colonie = tmp.getIndColNid();
                 int indn = tmp.get_pheroNid(colonie).second;
+                cout << "Colonie : " <<  colonie << "Nid" << indn << endl;
                 fic << COULEUR[indn][0][0] << " " << COULEUR[indn][0][1] << " " << COULEUR[indn][0][2] << "    ";
 
             }

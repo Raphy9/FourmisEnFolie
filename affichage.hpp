@@ -1,6 +1,7 @@
 #include "grilles.hpp"
 extern int TAILLEGRILLE;
 extern vector<int> TABCOLONIE;
+extern int compteurFichier;
 void affiche(Grille g,vector<Fourmis> tabf, bool debug);
 
 

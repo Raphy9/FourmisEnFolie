@@ -11,7 +11,7 @@ class Place{
         int get_numFourmi() const;
         bool get_contientSucre() const;
         bool get_contientNid() const;
-        bool get_contientNid(int colonie);
+        bool get_contientNid(int colonie) const;
         bool get_contientFourmi();
         pair<int,int> get_pheroSucre(int col) const;
         pair<float,int>  get_pheroNid(int col) const;
@@ -48,6 +48,7 @@ class Place{
 class Grille{
     public :
         Grille(int taille, int nbCol);
+        Place get_nid(int col);
         Place get_place(int ind);
         Place chargePlace(Coord c);
         void rangePlace(Place p);
@@ -61,7 +62,7 @@ class Grille{
 //Fonctions skizo
 int coord_to_ind(Coord c);
 void deplaceFourmi(Fourmis f, Place &p1, Place &p2);
-void placeNid(Grille &g,EnsCoord c, int col);
+void placeNid(Grille &g,Coord c, int col);
 void placeSucre(Grille &g,EnsCoord c);
 void placeFourmis(Grille &g, vector<Fourmis> f);
 

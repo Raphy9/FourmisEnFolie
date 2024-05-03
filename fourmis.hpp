@@ -2,7 +2,6 @@
 #include <vector>
 #include "coord.hpp"
 #include "doctest.h"
-
 class Fourmis{
     public :
         //Constructeur
@@ -19,7 +18,7 @@ class Fourmis{
         bool chercheSucre();
         bool rentreNid();
         bool estVivante();
-        void set_estVivante();
+        void tue();
         
 
 

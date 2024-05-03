@@ -54,7 +54,7 @@ void Fourmis::deplace(Coord c){
     coord = c;
 }
 
-void Fourmis::set_estVivante(){
+void Fourmis::tue(){
     enVie = false;
 }
 

@@ -2,7 +2,7 @@
 all : main
 
 main : main.o coord.o fourmis.o grilles.o affichage.o simulation.o
-	g++ -o main main.o coord.o fourmis.o grilles.o affichage.o
+	g++ -o main main.o coord.o fourmis.o grilles.o affichage.o simulation.o
 
 
 main.o : main.cpp 

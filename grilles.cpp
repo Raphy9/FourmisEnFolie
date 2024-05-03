@@ -44,6 +44,9 @@ bool Place::get_contientNid() const {
     return contientNid;
 }
 
+bool Place::get_contientNid(int col) const {
+    return pheroNid[col].first==1;
+}
 
 
 bool Place::get_estSurUnePiste(int colonie) const {
@@ -131,8 +134,8 @@ bool Place::estVide(){
 
 int Place::getIndColNid(){
     for(int i=0; i < int(pheroNid.size());i++){
-        if(pheroNid[i].first==1) return i;
-    } return 1;
+        if(pheroNid[i].first>=float(1)) return i;
+    } return -1;
 }
 
 
@@ -181,29 +184,18 @@ Place Grille::get_place(int ind){
     return listePlace[ind];
 }
 
-void placeNid(Grille &g,EnsCoord c, int col){
-    for(auto& elem : c.get_ens_coordonnees()){
-        Place a = g.chargePlace(elem);
-        a.poseNid(col); //ICI FAIRE UNE FONCTION QUI ATTRIBUE UN IND DE COL pour l'exemple j'ai mis col passer en param mais ya des soucis fin bref
-        g.rangePlace(a); // on pourrais enlever la boucle pour regler le soucis mais on aurait du mal a ttribué correctement les coords au nid 
-        // Solution ?? peut etre adapter tout ca avec une paire contenant a la fois l'indice de colonie et les coordonées du nid mais c trop specifique
-        // pour valoir le coup. Donc a voir.
+void placeNid(Grille &g,Coord c, int col){
+    Place a = g.chargePlace(c);
+    a.poseNid(col);
+    g.rangePlace(a);
     }
-}
-/**
-void placeSucre(Grille &g,EnsCoord c){
-    for(auto& elem : c.get_ens_coordonnees()){
-        Place a = g.chargePlace(elem);
-        a.poseSucre(elem);
-        g.rangePlace(a);
-    }
-}*/
+
 
 void placeFourmis(Grille &g, vector<Fourmis> f){
     for(auto& elem : f){
         Coord a = elem.get_coord();
         Place tmp = g.get_place(coord_to_ind(a));
-        tmp.poseFourmi(elem); //, elem.get_col());
+        tmp.poseFourmi(elem); 
         g.rangePlace(tmp);
     }
 }
@@ -235,6 +227,12 @@ void Grille::linearisePheroNid(int col) {
     }
 }
 
+Place Grille::get_nid(int col){
+    for(auto& elem :listePlace){
+        if (elem.get_contientNid(col)) return elem;
+    } throw invalid_argument("Nom de colonie invalide");
+}
+
 Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid){
     Grille res = Grille(TAILLEGRILLE, ensNid.taille());
     for(auto& f : f){
@@ -249,9 +247,10 @@ Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid){
         res.rangePlace(tmp);
     }
     for(int i = 0; i < ensNid.taille(); i++) {
-        placeNid(res, ensNid,i);               //Probleme de semantique ici les deux nids se voit attribué la meme colonie
-        res.linearisePheroNid(i);               // la derniere colonie qui est passée dans la putain de boucle de merde sortez moi de la pls
+        placeNid(res, ensNid.ieme(i),i); 
+        res.linearisePheroNid(i);
     }
+    
     return res;
 }
 
