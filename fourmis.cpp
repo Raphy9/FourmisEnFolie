@@ -69,13 +69,7 @@ vector<Fourmis> creeTabFourmis(EnsCoord e,vector<int> colo){
     } return res;
 }
 
-Fourmis chercheFourmis(vector<Fourmis> tabf, Coord c){
-    for (auto& f : tabf){
-        if(f.get_coord()==c){
-            return f;
-        }
-    } throw invalid_argument("Cette fourmis n'existe pas");
-}
+
 Fourmis chercheFourmis(vector<Fourmis> tabf, int ind){
     for (auto& f : tabf){
         if(f.get_num()==ind){
@@ -83,9 +77,11 @@ Fourmis chercheFourmis(vector<Fourmis> tabf, int ind){
         }
     } throw invalid_argument("Cette fourmis n'existe pas");
 }
+
+
 void rangeFourmi(vector<Fourmis> &tabf, Fourmis f){
     for(int i=0;i< int(tabf.size());i++){
-        if (f.get_coord() == tabf[i].get_coord()){
+        if (f.get_num() == tabf[i].get_num()){
             tabf[i] = f;
             return;
         }

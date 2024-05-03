@@ -5,7 +5,7 @@
 class Fourmis{
     public :
         //Constructeur
-        Fourmis(Coord c, int ind, int colo=-1);
+        Fourmis(Coord c, int ind, int colo);
         //Getters et setters
         Coord get_coord() const;
         int get_num() const;
@@ -35,6 +35,5 @@ class Fourmis{
 };
 
 vector<Fourmis> creeTabFourmis(EnsCoord e, vector<int> colo);
-Fourmis chercheFourmis(vector<Fourmis> tabf, Coord c);
 Fourmis chercheFourmis(vector<Fourmis> tabf, int ind);
 void rangeFourmi(vector<Fourmis> &tabf, Fourmis f);

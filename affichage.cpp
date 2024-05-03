@@ -42,7 +42,6 @@ void affiche(Grille g, vector<Fourmis> tabf, bool debug){
             else if(tmp.get_contientNid()){
                 int colonie = tmp.getIndColNid();
                 int indn = tmp.get_pheroNid(colonie).second;
-                cout << "Colonie : " <<  colonie << "Nid" << indn << endl;
                 fic << COULEUR[indn][0][0] << " " << COULEUR[indn][0][1] << " " << COULEUR[indn][0][2] << "    ";
 
             }

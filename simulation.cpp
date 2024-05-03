@@ -6,12 +6,12 @@ void simulation(){
     //On s'occupe de toutes les fourmis.
     for(auto& f : TABFOURMI){
         Coord p2 = voisines(f.get_coord()).choixHasard();
-        Place p = GRILLE.get_place(coord_to_ind(p2));
+        Place p = GRILLE.chargePlace(p2);
 
         //CONDITION 1 : f tue f2
-        if(f.estVivante() and p.get_contientFourmi() and chercheFourmis(TABFOURMI,p2).get_col()!=f.get_col()){
+        if(f.estVivante() and p.get_contientFourmi() and chercheFourmis(TABFOURMI,f.get_num()).get_col()!=f.get_col()){
             cout << "est rentré dans c1" << endl;
-            Fourmis tmp = chercheFourmis(TABFOURMI,p2);
+            Fourmis tmp = chercheFourmis(TABFOURMI,f.get_num());
             tmp.tue();
             rangeFourmi(TABFOURMI,tmp);
             p.set_num(-1);
@@ -74,7 +74,6 @@ void simulation(){
         //CONDITION 7
         if(f.chercheSucre() and p.estVide()){
             cout << "est rentré dans c7" << endl;
-
             f.deplace(p2);
             rangeFourmi(TABFOURMI,f);
             return;

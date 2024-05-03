@@ -53,6 +53,7 @@ int main(int argc, char **argv){
     }
     
     //Nombre de nid
+    /**
     vector<Coord> n;
     for(int i = 0; i < 2 ; i++) {
         bool verif = false;
@@ -64,30 +65,46 @@ int main(int argc, char **argv){
             }
         }
         
-    }
+    }*/
     
     
     //Constructeurs
     EnsCoord ensSucre = s;
-    EnsCoord ensNid = n;
+    EnsCoord ensNid = {{Coord(1,1),Coord(5,5)}};
 
    
 
     GRILLE = initialiseGrille(TABFOURMI,ensSucre,ensNid);
-    
+    vector<pair<float,int>> t1 = GRILLE.chargePlace(Coord(1,1)).get_pheroNid();
+    vector<pair<float,int>> t2 = GRILLE.chargePlace(Coord(5,5)).get_pheroNid();
+    /**
+    cout << "T1" << GRILLE.chargePlace(Coord(1,1)).get_contientNid(0) << endl;
+    cout << "T2" << GRILLE.chargePlace(Coord(5,5)).get_contientNid(1) << endl;
+    for(int i=0; i<int(t1.size());i++){
+        cout << "T1 " << t1[i].first  << " " << t1[i].second << endl;
+        cout << "T2 " << t2[i].first  << " " << t2[i].second << endl;
+
+    }*/
+
+    for(auto& elem : TABFOURMI){
+        cout << elem.get_num() << endl;
+    }
+
+    /**
     for(auto elem : TABFOURMI) {
         cout << "colonie: "<< elem.get_col() << "numeroFourmi: " << elem.get_num() << endl;
-    }
-    affiche(GRILLE,TABFOURMI,false);
+    }*/
+    //affiche(GRILLE,TABFOURMI,true);
     //Affichage
-    /**
+
+    
     for(int i=0;i<10;i++){
+        cout << i << "eme iteration" << endl;
         affiche(GRILLE,TABFOURMI,false);
         simulation();
         
 
     }
-*/
     
     
     
