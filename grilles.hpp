@@ -23,6 +23,7 @@ class Place{
         void poseSucre();
         void poseSucre(Fourmis &f);
         int get_nbSucre() const;
+        pair<int,int> get_maxPheroSucre();
         
         void enleveSucre();
         void poseNid(int col);
@@ -31,7 +32,7 @@ class Place{
         void posePheroNid(float intensite, int col);
         void posePheroSucre(int intensite,int col);
         void diminuePheroSucre();
-        
+        void setSucre(int n);
         
         //Méthodes
         bool estVide();
@@ -69,5 +70,5 @@ void deplaceFourmi(Fourmis f, Place &p1, Place &p2);
 
 void placeSucre(Grille &g,EnsCoord c);
 
-Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid);
+Grille initialiseGrille();
 int get_nb_colonie(vector<Fourmis> tabf);

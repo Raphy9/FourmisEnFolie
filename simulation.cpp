@@ -18,6 +18,7 @@ void simulation(){
         for(int j=0;j<TAILLEGRILLE;j++){
             Place p = GRILLE.chargePlace(Coord(i,j));
             p.diminuePheroSucre();
+            GRILLE.rangePlace(p);
         }
     }
     //Permet de changer l'ordre de deplacement des fourmis
@@ -134,7 +135,7 @@ void simulation(){
         }  
         for(int i=0; i< get_nb_colonie(TABFOURMI);i++){
             Place nid = GRILLE.get_nid(i);
-            if(nid.get_nbSucre()>=5){
+            if(nid.get_nbSucre()>=10){
                 Fourmis newf(GRILLE.CoordAlea(),TABFOURMI.size(),i);
                 TABFOURMI.push_back(newf);
                 Place p = GRILLE.chargePlace(newf.get_coord());

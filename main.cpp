@@ -23,13 +23,12 @@ int main(int argc, char **argv){
     if(context.shouldExit()) return res;
     srand(time(0));
     
-    
+    /**
     //10 fourmis appartenant a la colonie i a une position aléatoire
-    for(int i = 0; i < 6; i++) {
-        for(int k = 0 ; k < 3; k++) {
+    for(int i = 0; i < 2; i++) {
+        for(int k = 0 ; k < 7; k++) {
             bool verif = false;
             while(not verif){
-                
                 Coord c = GRILLE.coordAlea();
                 if (GRILLE.chargePlace(c).estVide()){
                     verif = true;
@@ -42,7 +41,7 @@ int main(int argc, char **argv){
     
     //Nombre de sucre
     vector<Coord> s;
-    for(int i = 0; i < 60 ; i++) {
+    for(int i = 0; i < 100 ; i++) {
         bool verif = false;
         while(not verif){
             Coord c = GRILLE.coordAlea();
@@ -58,7 +57,7 @@ int main(int argc, char **argv){
     //Nombre de nid
     
     vector<Coord> n;
-    for(int i = 0; i < 6 ; i++) {
+    for(int i = 0; i < 2 ; i++) {
         bool verif = false;
         while(not verif){
             Coord c = GRILLE.coordAlea();
@@ -74,10 +73,10 @@ int main(int argc, char **argv){
     //Constructeurs
     EnsCoord ensSucre = s;
     EnsCoord ensNid = n;
-
-    GRILLE = initialiseGrille(TABFOURMI,ensSucre,ensNid);
+    */
+    GRILLE = initialiseGrille();
     //Affichage
-    for(int i=0;i<500;i++){
+    for(int i=0;i<700;i++){
         affiche(GRILLE,TABFOURMI,false);
         simulation();
     }

@@ -93,6 +93,10 @@ void Place::poseSucre(){
     contientSucre++;
 }
 
+void Place::setSucre(int n){
+    contientSucre = n;
+}
+
 void Place::poseSucre(Fourmis &f){
     f.poseSucre();
     rangeFourmi(TABFOURMI,f);
@@ -146,6 +150,16 @@ void Place::diminuePheroSucre(){
     for(int i=0;i<int(pheroSucre.size());i++){
         pheroSucre[i].first = max(0,pheroSucre[i].first-5);
     }
+}
+
+pair<int,int> Place::get_maxPheroSucre(){
+    pair<int,int> res;
+    res.first = -1;
+    for(auto& elem : pheroSucre){
+        if (elem.first>res.first){
+            res = elem;
+        }
+    } return res;
 }
 
 
@@ -368,30 +382,64 @@ TEST_CASE("Test de la fonction get_nid") {
     CHECK_THROWS_AS(grille.get_nid(3), invalid_argument);
 }
 
-Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid){
-    Grille res = Grille(TAILLEGRILLE, ensNid.taille());
-    for(auto& f : f){
-        Place tmp = res.chargePlace(f.get_coord());
-        tmp.poseFourmi(f);
-        res.rangePlace(tmp);
-        
+Grille initialiseGrille(){
+    cout << "Quelle taille de grille souhaitez vous ? (30 max pour 10sec d'éxécution)" << endl;
+    cin >> TAILLEGRILLE;
+    cout << "Combien de colonies souhaitez vous ?(maximum : 4)" << endl;
+    int nbCol;
+    cin >> nbCol;
+    Grille res = Grille(TAILLEGRILLE,nbCol);
+    //Pose des nids
+    for(int i = 0; i < nbCol ; i++) {
+        bool verif = false;
+        while(not verif){
+            Coord c = res.coordAlea();
+            if(res.chargePlace(c).estVide()){
+                Place tmp = res.chargePlace(c);
+                tmp.poseNid(i);
+                res.rangePlace(tmp);
+                verif = true;
+            }
+        } res.linearisePheroNid(i);
+          cout << "Fin de la " << i+1 <<"ème linéarisation." << endl;
     }
-    for(int i=0; i<ensSucre.taille();i++){
-        Place tmp = res.chargePlace(ensSucre.ieme(i));
-        tmp.poseSucre();
-        res.rangePlace(tmp);
+    //Pose des fourmis
+    int nbf;
+    cout << "Combien de fourmis par colonie voulez vous ? " << endl;
+    cin >> nbf;
+
+    for(int i=0;i<nbCol;i++){
+        for(int j=0;j<nbf;j++){
+            bool verif = false;
+            while(!verif){
+                Coord c = res.CoordAlea();
+                if(res.chargePlace(c).estVide() and res.chargePlace(c).get_pheroNid(i).first>=float(0.6)){
+                    Fourmis f(c,coord_to_ind(c),i);
+                    Place tmp = res.chargePlace(c);
+                    tmp.poseFourmi(f);
+                    TABFOURMI.push_back(f);
+                    res.rangePlace(tmp);
+                    verif = true;
+                }
+            }
+        }
     }
-    for(int i = 0; i < ensNid.taille(); i++) {
-        Place a = res.chargePlace(ensNid.ieme(i));
-        a.poseNid(i);
-        res.rangePlace(a); 
-        res.linearisePheroNid(i);
-        vector<pair<float,int>> t = res.chargePlace(ensNid.ieme(i)).get_pheroNid();
-        
+
+    int nbSucre;
+    cout << "Combien de sucre souhaitez vous ?" << endl;
+    cin >> nbSucre;
+    for(int i=0; i<nbSucre;i++){
+        bool verif = false;
+        while(!verif){
+            Coord c = res.coordAlea();
+            if(res.chargePlace(c).estVide()){
+                Place tmp = res.chargePlace(c);
+                tmp.set_contientSucre(5);
+                res.rangePlace(tmp);
+                verif = true;
+            }
+        }
     }
-    cout << "Nombre de fourmis : " << f.size() << endl;
-    cout << "Nombre de sucre : " << ensSucre.taille() << endl;
-    cout << "Nombre de nid/colonie : " << ensNid.taille() << endl;
     return res;
 }
 

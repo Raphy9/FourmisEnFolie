@@ -12,9 +12,7 @@ using namespace std;
 
 // variable globale permettant de creer des noms de fichiers differents
 //11 colonies max cest assez !! {255,153,0}
-vector<vector<vector<int>>> COULEUR = {{{255,0,0},{255,80,80},{255,168,168}},{{255,150,0},{255,255,99},{255,255,176}},{{100,255,0},{155,255,90},{205,255,172}},{{0,255,200},{115,254,224},{191,255,241}},{{0,175,255},{111,208,252},{178,230,254}},{{0,0,255},{97,97,255},{178,178,254}},{{255,0,150}, {252,93,187},{254,169,220}}};
-//Logique : plus foncé : nid, moyen clair : fourmis, clair : pheromones
-//Chaque colonie possède sa propre couleur
+vector<vector<vector<int>>> COULEUR =  {{{255,0,0},{255,130,130},{255,168,168}},{{38,128,0},{175,255,125},{215,255,190}},{{0,170,255},{125,212,255},{194,235,255}},{{76,0,255},{161,122,253},{210,192,253}}};//Chaque colonie possède sa propre couleur
 void affiche(Grille g, vector<Fourmis> tabf, bool debug){
     //Code RGB Fourmi col1 : rgb(21, 36, 149)
     ostringstream filename;
@@ -45,23 +43,22 @@ void affiche(Grille g, vector<Fourmis> tabf, bool debug){
                 fic << COULEUR[indn][0][0] << " " << COULEUR[indn][0][1] << " " << COULEUR[indn][0][2] << "    ";
 
             }
-            else if(tmp.get_contientSucre()){
-                fic << 255 << " " << 255 << " " << 255 << "    "; // blanc
+            else if(tmp.get_nbSucre()>0){
+                fic << 255 - (5- tmp.get_nbSucre())*31 << " " << 255 - (5- tmp.get_nbSucre())*31  << " " << 255 - (5- tmp.get_nbSucre())*31 << "    "; 
 
             }  
+            else if (tmp.get_maxPheroSucre().first >240){
+                pair<int,int> ph = tmp.get_maxPheroSucre();
+                fic << COULEUR[ph.second][2][0] + ph.first/10 << " " << COULEUR[ph.second][2][1] + ph.first/10 << " " << COULEUR[ph.second][2][2]<<"    ";
+
+            }
             else if(tmp.get_pheroNid(0).first>0 and debug){
                 fic << 254 << " " << 200 - (1 -tmp.get_pheroNid(0).first)*100  << " " << 71 << "    ";
-            } 
-            else if(tmp.get_pheroSucre(0).first>0 and debug){
-                fic << 210 << " " << 210  << " "<< 210 << "    ";
             }else{
                 fic << 18 << " " << 12 << " " << 60 << "    ";
             }
         } fic << endl;
     } fic.close();
-
-
-
 }
 
 
