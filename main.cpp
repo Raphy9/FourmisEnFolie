@@ -25,10 +25,11 @@ int main(int argc, char **argv){
     
     
     //10 fourmis appartenant a la colonie i a une position aléatoire
-    for(int i = 0; i < 2; i++) { //maximum 2 colonie pour pas exploser l'affichage
-        for(int k = 0 ; k < 8; k++) {
+    for(int i = 0; i < 6; i++) {
+        for(int k = 0 ; k < 3; k++) {
             bool verif = false;
             while(not verif){
+                
                 Coord c = GRILLE.coordAlea();
                 if (GRILLE.chargePlace(c).estVide()){
                     verif = true;
@@ -41,7 +42,7 @@ int main(int argc, char **argv){
     
     //Nombre de sucre
     vector<Coord> s;
-    for(int i = 0; i < 20 ; i++) {
+    for(int i = 0; i < 60 ; i++) {
         bool verif = false;
         while(not verif){
             Coord c = GRILLE.coordAlea();
@@ -57,7 +58,7 @@ int main(int argc, char **argv){
     //Nombre de nid
     
     vector<Coord> n;
-    for(int i = 0; i < 2 ; i++) {
+    for(int i = 0; i < 6 ; i++) {
         bool verif = false;
         while(not verif){
             Coord c = GRILLE.coordAlea();
@@ -74,40 +75,10 @@ int main(int argc, char **argv){
     EnsCoord ensSucre = s;
     EnsCoord ensNid = n;
 
-   
-
     GRILLE = initialiseGrille(TABFOURMI,ensSucre,ensNid);
-    vector<pair<float,int>> t1 = GRILLE.chargePlace(Coord(1,1)).get_pheroNid();
-    vector<pair<float,int>> t2 = GRILLE.chargePlace(Coord(5,5)).get_pheroNid();
-    /**
-    cout << "T1" << GRILLE.chargePlace(Coord(1,1)).get_contientNid(0) << endl;
-    cout << "T2" << GRILLE.chargePlace(Coord(5,5)).get_contientNid(1) << endl;
-    for(int i=0; i<int(t1.size());i++){
-        cout << "T1 " << t1[i].first  << " " << t1[i].second << endl;
-        cout << "T2 " << t2[i].first  << " " << t2[i].second << endl;
-
-    }*/
-
-
-
-    /**
-    for(auto elem : TABFOURMI) {
-        cout << "colonie: "<< elem.get_col() << "numeroFourmi: " << elem.get_num() << endl;
-    }*/
-    //affiche(GRILLE,TABFOURMI,true);
     //Affichage
-
-    
     for(int i=0;i<500;i++){
-        cout << i << "eme iteration" << endl;
-        affiche(GRILLE,TABFOURMI,true);
+        affiche(GRILLE,TABFOURMI,false);
         simulation();
-        
-
     }
-    
-
-   
-    
-    
 }

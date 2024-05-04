@@ -19,9 +19,10 @@ class Place{
         int getIndColNid();
         bool get_estSurUnePiste(int colonie) const;
         void set_num(int n);
-        void set_contientSucre(bool b);
+        void set_contientSucre(int b);
         void poseSucre();
         void poseSucre(Fourmis &f);
+        int get_nbSucre() const;
         
         void enleveSucre();
         void poseNid(int col);
@@ -42,7 +43,7 @@ class Place{
         vector<pair<int,int>> pheroSucre;
         vector<pair<float,int>> pheroNid; //intensite,colonie
         int numFourmi;
-        bool contientSucre;
+        int contientSucre;
         bool contientNid;
     };
 
@@ -54,6 +55,7 @@ class Grille{
         void rangePlace(Place p);
         void linearisePheroNid(int col);
         void placeFourmis(vector<Fourmis> f);
+        Coord CoordAlea();
 
         vector<Fourmis> listeFourmis;
         Coord coordAlea();
@@ -68,3 +70,4 @@ void deplaceFourmi(Fourmis f, Place &p1, Place &p2);
 void placeSucre(Grille &g,EnsCoord c);
 
 Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid);
+int get_nb_colonie(vector<Fourmis> tabf);

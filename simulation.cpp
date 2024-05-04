@@ -9,9 +9,10 @@ void shuffle(vector<Fourmis> &tableau) {
         swap(tableau[i], tableau[j]);
     }
 }
-
 void simulation(){
-    cout << "Taille tabf"<< TABFOURMI.size()<<endl;
+    int cpt0 = 0;
+    int cpt1 =0;
+    int cpt2 = 0;
     //Permet de modifier la grille - Simule une itération
     for(int i=0;i<TAILLEGRILLE;i++){
         for(int j=0;j<TAILLEGRILLE;j++){
@@ -20,13 +21,17 @@ void simulation(){
         }
     }
     //Permet de changer l'ordre de deplacement des fourmis
-    //shuffle(TABFOURMI);
+    shuffle(TABFOURMI);
 
     //On s'occupe de toutes les fourmis.
     for(auto& f : TABFOURMI){
+        if(f.estVivante()){
+            if(f.get_col()==0) cpt0++;
+            else if (f.get_col()==1 )cpt1++;
+            else cpt2++;
+        }
 
         if(f.get_num()==-1) continue;
-        cout << "Fourmis sur la table d'opération " << f.get_coord() << endl;
         bool verif = false;
         Place nidF = GRILLE.get_nid(f.get_col());
         EnsCoord p2 = voisines(f.get_coord());
@@ -36,11 +41,9 @@ void simulation(){
         }
         for(auto& place : p){
         //CONDITION 1 : f tue f2
-
         if(f.estVivante() and place.get_contientFourmi()){
             Fourmis f2 = chercheFourmis(TABFOURMI, place.get_numFourmi());
             if(f2.get_col()!=f.get_col() and f2.estVivante()){
-                cout << "est rentré dans c1" << endl;
                 Place p = GRILLE.chargePlace(f.get_coord());
                 p.set_num(-1);
                 GRILLE.rangePlace(p);
@@ -58,10 +61,9 @@ void simulation(){
         } if(verif) continue;
         //CONDITION 2 : si la fourmis cherche un sucre et p2 contient un sucre
         for(auto&place : p){
-            if(f.estVivante() and f.chercheSucre() and place.get_contientSucre()){
-                cout << "est rentré dans c2" << endl;
+            if(f.estVivante() and f.chercheSucre() and place.get_contientSucre() and !place.get_contientNid()){
                 f.prendSucre();
-                place.set_contientSucre(false);
+                place.enleveSucre();
                 place.posePheroSucre(255,f.get_col()); //JE SAIS PAS CMB FAUT METTRE JE RETROUVE PAS
                 GRILLE.rangePlace(place);
                 rangeFourmi(TABFOURMI,f);
@@ -69,21 +71,21 @@ void simulation(){
             } if(verif) break;
         }
         if(verif) continue;
-        
         //CONDITION 3 la fourmi a son sucre et et il y a un nid
         for(auto&place : p){
-            if( f.estVivante() and f.rentreNid() and place.get_contientNid(f.get_col())){
-                cout << "est rentré dans c3" << endl;
+            if(f.estVivante() and f.rentreNid() and place.get_contientNid(f.get_col())){
                 f.poseSucre();
                 rangeFourmi(TABFOURMI,f);
+                place.poseSucre();
+                GRILLE.rangePlace(place);
                 verif = true;
             }if(verif) break;
         } if(verif) continue;
 
         //CONDITION 4 : 
+
         for(auto&place : p){
-            if( f.estVivante() and f.rentreNid() and place.estVide() and nidF.estPlusProcheNid(place, GRILLE.chargePlace(f.get_coord()))){
-                cout << "est rentré dans c4" << endl;
+            if(f.estVivante() and f.rentreNid() and place.estVide() and nidF.estPlusProcheNid(place, GRILLE.chargePlace(f.get_coord()))){
                 Place p = GRILLE.chargePlace(f.get_coord());
                 p.set_num(-1);
                 GRILLE.rangePlace(p);
@@ -99,8 +101,7 @@ void simulation(){
 
         //CONDITION 5
        for(auto place :p) {
-        if(f.rentreNid() and place.estVide() and nidF.estPlusLoinNid(place,GRILLE.chargePlace(f.get_coord()))){
-            cout << "est rentré dans c5" << endl;
+        if(f.estVivante() and f.rentreNid() and place.estVide() and nidF.estPlusLoinNid(place,GRILLE.chargePlace(f.get_coord()))){
             f.deplace(place.get_coord());
             rangeFourmi(TABFOURMI,f);
             verif = true;
@@ -108,9 +109,8 @@ void simulation(){
         } if (verif) continue;
 
         //CONDITION 6
-        for(auto place :p) {
-        if(f.chercheSucre() and place.estVide() and place.get_estSurUnePiste(f.get_col())){
-            cout << "est rentré dans c6" << endl;
+        for(auto place :p){
+        if(f.estVivante() and f.chercheSucre() and place.estVide() and place.get_estSurUnePiste(f.get_col())){
             f.deplace(place.get_coord());
             rangeFourmi(TABFOURMI,f);
             verif = true;
@@ -120,8 +120,7 @@ void simulation(){
         
         //CONDITION 7
         Place place = GRILLE.chargePlace(voisines(f.get_coord()).choixHasard());
-        if (f.chercheSucre() and place.estVide()) {
-            cout << "est rentré dans c7" << endl;
+        if (f.estVivante() and f.chercheSucre() and place.estVide()) {
             Place p = GRILLE.chargePlace(f.get_coord());
             p.set_num(-1);
             GRILLE.rangePlace(p);
@@ -132,7 +131,17 @@ void simulation(){
             rangeFourmi(TABFOURMI,f);
             verif = true;
         }
-        }
-
-
+        }  
+        for(int i=0; i< get_nb_colonie(TABFOURMI);i++){
+            Place nid = GRILLE.get_nid(i);
+            if(nid.get_nbSucre()>=5){
+                Fourmis newf(GRILLE.CoordAlea(),TABFOURMI.size(),i);
+                TABFOURMI.push_back(newf);
+                Place p = GRILLE.chargePlace(newf.get_coord());
+                p.poseFourmi(newf);
+                GRILLE.rangePlace(p);
+                nid.set_contientSucre(nid.get_nbSucre()-5);
+                GRILLE.rangePlace(nid);
+            }
+        }    
     }

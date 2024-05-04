@@ -1,5 +1,5 @@
 #include "coord.hpp"
-int TAILLEGRILLE = 20;
+int TAILLEGRILLE = 30;
 #include "doctest.h"
 //---------CLASSE COORDONNÉE--------------
 
@@ -257,7 +257,6 @@ Coord EnsCoord::choixHasard() const {
         throw invalid_argument("remplis stp");
     }
     int a = rand()%(taille());
-    //cout << a << endl;
     return ieme(a);
 }
 

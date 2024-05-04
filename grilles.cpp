@@ -13,7 +13,7 @@ Place::Place(Coord c,int nbCol){
     coord = c;
     numFourmi = -1;
     contientNid = false;
-    contientSucre = false;
+    contientSucre = 0;
     for(int i=0;i<nbCol;i++){
         pair<float,int> tmp;
         tmp.first = 0;
@@ -36,7 +36,12 @@ int Place::get_numFourmi() const {
 }
 
 
+
 bool Place::get_contientSucre() const {
+    return contientSucre>0;
+}
+
+int Place::get_nbSucre() const {
     return contientSucre;
 }
 
@@ -73,7 +78,7 @@ pair<int,int> Place::get_pheroSucre(int col) const {
 }
 
 bool Place::estVide(){
-    return numFourmi==-1 and !contientNid and !contientSucre;
+    return numFourmi==-1 and !contientNid and contientSucre==0;
 }
 
 int Place::getIndColNid(){
@@ -85,20 +90,20 @@ int Place::getIndColNid(){
 //Setters
 
 void Place::poseSucre(){
-    contientSucre = true;
+    contientSucre++;
 }
 
 void Place::poseSucre(Fourmis &f){
     f.poseSucre();
     rangeFourmi(TABFOURMI,f);
-    contientSucre = true;
+    contientSucre++;
     pheroSucre[f.get_col()].first = 255; //je garde ce que tavais mis heinn hihiihihihiihhi ALEDD
 }
 
 
 
 void Place::enleveSucre(){
-    contientSucre = false;
+    contientSucre --;
 }
 
 void Place::poseNid(int col){
@@ -109,11 +114,8 @@ void Place::poseNid(int col){
 
 
 void Place::poseFourmi(Fourmis f){
-    if (numFourmi == -1) {
-        f.deplace(coord);
-        numFourmi = f.get_num();
-        //f.set_col(col);
-    }
+    numFourmi = f.get_num();
+        
 }
 void Place::enleveFourmi(){
     numFourmi = -1;
@@ -135,13 +137,13 @@ void Place::set_num(int n){
     numFourmi = n;
 }
 
-void Place::set_contientSucre(bool b){
+void Place::set_contientSucre(int b){
     contientSucre = b;
 }
 
 
 void Place::diminuePheroSucre(){
-    for(int i=0;i<pheroSucre.size();i++){
+    for(int i=0;i<int(pheroSucre.size());i++){
         pheroSucre[i].first = max(0,pheroSucre[i].first-5);
     }
 }
@@ -271,10 +273,19 @@ void Grille::rangePlace(Place p) {
     } throw invalid_argument("Cette place n'existe pas !!");
 }
 
+
+Coord Grille::CoordAlea(){
+    bool verif = true;
+    while(verif){
+        Coord res(rand() % (TAILLEGRILLE), rand() % (TAILLEGRILLE));
+        if (chargePlace(res).estVide()) return res;
+    } return Coord(0,0);
+}
+
 TEST_CASE("Tests rangePlace"){
     Grille g(5,3);
     Place p = g.chargePlace(Coord(1,2));
-    p.set_contientSucre(true);
+    p.set_contientSucre(1);
     g.rangePlace(p);
     CHECK(g.chargePlace(Coord(1,2)).get_contientSucre());
     p.set_num(2);
@@ -290,7 +301,6 @@ TEST_CASE("Tests rangePlace"){
 
 void Grille::placeFourmis(vector<Fourmis> f){
     for(auto& elem : f){
-        cout << "heheheheh" << endl;
         Coord a = elem.get_coord();
         Place tmp = chargePlace(a);
         tmp.poseFourmi(elem); 
@@ -377,11 +387,6 @@ Grille initialiseGrille(vector<Fourmis> f, EnsCoord ensSucre, EnsCoord ensNid){
         res.rangePlace(a); 
         res.linearisePheroNid(i);
         vector<pair<float,int>> t = res.chargePlace(ensNid.ieme(i)).get_pheroNid();
-        /**
-        for(auto& elem : t){
-            cout << "pheros col"<< endl ;
-            cout << elem.first << " " << elem.second << endl;
-        } cout << "-------" << endl; */
         
     }
     cout << "Nombre de fourmis : " << f.size() << endl;
@@ -410,6 +415,12 @@ int coord_to_ind(Coord c) {
     return c.get_coordonnees().first*TAILLEGRILLE + c.get_coordonnees().second;
 }
 
+int get_nb_colonie(vector<Fourmis> tabf){
+    int cpt = 0;
+    for(auto& elem : tabf){
+        if(cpt <= elem.get_col()) cpt++;
+    } return cpt;
+}
 
 // TEST DE LA CLASSE PLACE
 
@@ -437,12 +448,12 @@ TEST_CASE("Getter Setter") {
 
 
 TEST_CASE("Test de la fonction coordAlea") {
-    Grille grille(20, 2); // Supposons 2 colonies
+    Grille grille(TAILLEGRILLE, 2); // Supposons 2 colonies
     Coord res = grille.coordAlea();
     CHECK(res.get_coordonnees().first >= 0);
-    CHECK(res.get_coordonnees().first < 20);
+    CHECK(res.get_coordonnees().first < TAILLEGRILLE);
     CHECK(res.get_coordonnees().second >= 0);
-    CHECK(res.get_coordonnees().second < 20);
+    CHECK(res.get_coordonnees().second < TAILLEGRILLE);
 }
 
 TEST_CASE("Test de la fonction deplaceFourmi") {
