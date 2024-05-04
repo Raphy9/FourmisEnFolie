@@ -29,7 +29,7 @@ class Place{
         void enleveFourmi();
         void posePheroNid(float intensite, int col);
         void posePheroSucre(int intensite,int col);
-        void diminuePheroSucre(int col);
+        void diminuePheroSucre();
         
         
         //Méthodes

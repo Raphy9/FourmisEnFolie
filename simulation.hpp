@@ -3,3 +3,4 @@ extern  vector<Fourmis> TABFOURMI;
 extern Grille GRILLE;
 
 void simulation();
+void shuffle(vector<Fourmis>& tableau);

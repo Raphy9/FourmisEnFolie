@@ -92,7 +92,7 @@ void Place::poseSucre(Fourmis &f){
     f.poseSucre();
     rangeFourmi(TABFOURMI,f);
     contientSucre = true;
-    pheroSucre[f.get_col()].first = 100; //je garde ce que tavais mis heinn hihiihihihiihhi ALEDD
+    pheroSucre[f.get_col()].first = 255; //je garde ce que tavais mis heinn hihiihihihiihhi ALEDD
 }
 
 
@@ -139,9 +139,14 @@ void Place::set_contientSucre(bool b){
     contientSucre = b;
 }
 
-void Place::diminuePheroSucre(int col){
-    pheroSucre[col].first--;
+
+void Place::diminuePheroSucre(){
+    for(int i=0;i<pheroSucre.size();i++){
+        pheroSucre[i].first = max(0,pheroSucre[i].first-5);
+    }
 }
+
+
 
 
 //Fonctions 
@@ -178,10 +183,7 @@ TEST_CASE("Phéromones") {
     p3.posePheroNid(0.5, 1);
     CHECK(p3.get_pheroNid(0).first == 0.5);
     CHECK(p3.get_pheroNid(1).first == 0.5);
-    p3.diminuePheroSucre(0);
-    p3.diminuePheroSucre(1);
-    CHECK(p3.get_pheroSucre(0).first == -1); //parce que c'est 0 par défaut
-    CHECK(p3.get_pheroSucre(1).first == -1);
+    
 }
 
 TEST_CASE("Est plus proche est plus loin") {
@@ -223,8 +225,7 @@ TEST_CASE("Est vide tests") {
     // Cas où des phéromones de sucre sont présentes
     p9.posePheroSucre(100, 0);
     CHECK(p9.estVide() == false);
-    p9.diminuePheroSucre(0);
-    CHECK(p9.estVide() == false);
+    
 
 }
 
@@ -296,6 +297,7 @@ void Grille::placeFourmis(vector<Fourmis> f){
         //rangePlace(tmp);
     }
 }
+
 
 TEST_CASE("Place fourmis"){
     vector<Fourmis> f;

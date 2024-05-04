@@ -26,7 +26,7 @@ int main(int argc, char **argv){
     
     //10 fourmis appartenant a la colonie i a une position aléatoire
     for(int i = 0; i < 2; i++) { //maximum 2 colonie pour pas exploser l'affichage
-        for(int k = 0 ; k < 5; k++) {
+        for(int k = 0 ; k < 8; k++) {
             bool verif = false;
             while(not verif){
                 Coord c = GRILLE.coordAlea();
@@ -41,7 +41,7 @@ int main(int argc, char **argv){
     
     //Nombre de sucre
     vector<Coord> s;
-    for(int i = 0; i < 5 ; i++) {
+    for(int i = 0; i < 20 ; i++) {
         bool verif = false;
         while(not verif){
             Coord c = GRILLE.coordAlea();
@@ -72,7 +72,7 @@ int main(int argc, char **argv){
     
     //Constructeurs
     EnsCoord ensSucre = s;
-    EnsCoord ensNid = {{Coord(1,1),Coord(5,5)}};
+    EnsCoord ensNid = n;
 
    
 
@@ -88,7 +88,7 @@ int main(int argc, char **argv){
 
     }*/
 
-    
+
 
     /**
     for(auto elem : TABFOURMI) {
@@ -98,14 +98,16 @@ int main(int argc, char **argv){
     //Affichage
 
     
-    for(int i=0;i<100;i++){
+    for(int i=0;i<500;i++){
         cout << i << "eme iteration" << endl;
-        affiche(GRILLE,TABFOURMI,false);
+        affiche(GRILLE,TABFOURMI,true);
         simulation();
         
 
     }
     
+
+   
     
     
 }
