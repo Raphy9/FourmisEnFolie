@@ -3,12 +3,13 @@
 //CLASSE FOURMI
 
 // Constructeurs
-Fourmis::Fourmis(Coord c, int ind,int colo){
+Fourmis::Fourmis(Coord c, int ind,int colo,int type){
     coord = c;
     num = ind;
     col = colo;
     porteSucre = false;
     enVie = true;
+    typeF = type;
 }
 
 //Getter Setters
@@ -18,6 +19,10 @@ Coord Fourmis::get_coord() const {
 }
 int Fourmis::get_num() const {
     return num;
+}
+
+int Fourmis::get_type() const{
+    return typeF;
 }
 
 int Fourmis::get_col() const{
@@ -58,16 +63,7 @@ void Fourmis::tue(){
     enVie = false;
 }
 
-//Fonctions 
-vector<Fourmis> creeTabFourmis(EnsCoord e,vector<int> colo){
-    vector<Fourmis> res = {};
-    if(e.taille() != int(colo.size())){
-        throw invalid_argument("La taille de l'ensemble des coordonnées n'est pas la meme que le vect colo ! ");
-    }
-    for(int i=0;i<e.taille();i++){
-        res.push_back(Fourmis(e.ieme(i),i,colo[i]));
-    } return res;
-}
+
 
 
 Fourmis chercheFourmis(vector<Fourmis> tabf, int ind){
@@ -79,8 +75,8 @@ Fourmis chercheFourmis(vector<Fourmis> tabf, int ind){
 }
 
 TEST_CASE("Cherche fourmis"){
-    Fourmis a(Coord(2,1),0,0);
-    Fourmis b(Coord(2,2),1,1);
+    Fourmis a(Coord(2,1),0,0,0);
+    Fourmis b(Coord(2,2),1,1,0);
     vector<Fourmis> test = {a,b};
     CHECK(chercheFourmis(test,0).get_coord() == a.get_coord());
     CHECK(chercheFourmis(test,1).get_coord() == b.get_coord());
@@ -99,8 +95,8 @@ void rangeFourmi(vector<Fourmis> &tabf, Fourmis f){
 }
 
 TEST_CASE("Range fourmi"){
-    Fourmis a(Coord(2,1),0,0);
-    Fourmis b(Coord(2,2),1,1);
+    Fourmis a(Coord(2,1),0,0,0);
+    Fourmis b(Coord(2,2),1,1,0);
     vector<Fourmis> test = {a,b};
     a.set_col(2);
     b.tue();
@@ -116,7 +112,10 @@ TEST_CASE("Fourmis") {
     vector<Coord> coordFourmis = {Coord(1,1)};
     EnsCoord ensCoordFourmis = coordFourmis;
     vector<int> tabC {{1}};
-    vector<Fourmis> tabFourmis = creeTabFourmis(ensCoordFourmis,tabC);
+    vector<Fourmis> tabFourmis;
+    for(int i=0;i<ensCoordFourmis.taille();i++){
+        tabFourmis.push_back(Fourmis(ensCoordFourmis.ieme(i),i,0,0));
+    }
     Fourmis fourmiTest = tabFourmis[0];
 
     CHECK(fourmiTest.get_coord() == Coord(1,1));

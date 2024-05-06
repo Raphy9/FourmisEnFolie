@@ -9,6 +9,14 @@ void shuffle(vector<Fourmis> &tableau) {
         swap(tableau[i], tableau[j]);
     }
 }
+
+int tireFourmis(){
+    int tirage = rand() %100;
+    if(tirage < 30){
+        return 0;
+    } return 0;
+
+}
 void simulation(){
     int cpt0 = 0;
     int cpt1 =0;
@@ -42,7 +50,7 @@ void simulation(){
         }
         for(auto& place : p){
         //CONDITION 1 : f tue f2
-        if(f.estVivante() and place.get_contientFourmi()){
+        if(f.get_type()==0 and f.estVivante() and place.get_contientFourmi()){
             Fourmis f2 = chercheFourmis(TABFOURMI, place.get_numFourmi());
             if(f2.get_col()!=f.get_col() and f2.estVivante()){
                 Place p = GRILLE.chargePlace(f.get_coord());
@@ -62,7 +70,7 @@ void simulation(){
         } if(verif) continue;
         //CONDITION 2 : si la fourmis cherche un sucre et p2 contient un sucre
         for(auto&place : p){
-            if(f.estVivante() and f.chercheSucre() and place.get_contientSucre() and !place.get_contientNid()){
+            if(f.get_type()!=0 and f.estVivante() and f.chercheSucre() and place.get_contientSucre() and !place.get_contientNid()){
                 f.prendSucre();
                 place.enleveSucre();
                 place.posePheroSucre(255,f.get_col()); //JE SAIS PAS CMB FAUT METTRE JE RETROUVE PAS
@@ -74,7 +82,7 @@ void simulation(){
         if(verif) continue;
         //CONDITION 3 la fourmi a son sucre et et il y a un nid
         for(auto&place : p){
-            if(f.estVivante() and f.rentreNid() and place.get_contientNid(f.get_col())){
+            if(f.get_type()!=0 and f.estVivante() and f.rentreNid() and place.get_contientNid(f.get_col())){
                 f.poseSucre();
                 rangeFourmi(TABFOURMI,f);
                 place.poseSucre();
@@ -86,7 +94,7 @@ void simulation(){
         //CONDITION 4 : 
 
         for(auto&place : p){
-            if(f.estVivante() and f.rentreNid() and place.estVide() and nidF.estPlusProcheNid(place, GRILLE.chargePlace(f.get_coord()))){
+            if(f.get_type()!=0 and f.estVivante() and f.rentreNid() and place.estVide() and nidF.estPlusProcheNid(place, GRILLE.chargePlace(f.get_coord()))){
                 Place p = GRILLE.chargePlace(f.get_coord());
                 p.set_num(-1);
                 GRILLE.rangePlace(p);
@@ -102,8 +110,14 @@ void simulation(){
 
         //CONDITION 5
        for(auto place :p) {
-        if(f.estVivante() and f.rentreNid() and place.estVide() and nidF.estPlusLoinNid(place,GRILLE.chargePlace(f.get_coord()))){
+        if(f.get_type()!=0 and f.estVivante() and f.rentreNid() and place.estVide() and nidF.estPlusLoinNid(place,GRILLE.chargePlace(f.get_coord()))){
+            Place p = GRILLE.chargePlace(f.get_coord());
+            p.set_num(-1);
+            GRILLE.rangePlace(p);
             f.deplace(place.get_coord());
+            p = GRILLE.chargePlace(f.get_coord());
+            p.poseFourmi(f);
+            GRILLE.rangePlace(p);
             rangeFourmi(TABFOURMI,f);
             verif = true;
         }if(verif) break;
@@ -111,8 +125,14 @@ void simulation(){
 
         //CONDITION 6
         for(auto place :p){
-        if(f.estVivante() and f.chercheSucre() and place.estVide() and place.get_estSurUnePiste(f.get_col())){
+        if((f.get_col()!=0 and  f.estVivante() and f.chercheSucre() and place.estVide() and place.get_estSurUnePiste(f.get_col())) or ( f.estVivante() and f.get_type()==0 and place.estVide() and place.get_estSurUnePisteGuerriere() )){
+            Place p = GRILLE.chargePlace(f.get_coord());
+            p.set_num(-1);
+            GRILLE.rangePlace(p);
             f.deplace(place.get_coord());
+            p = GRILLE.chargePlace(f.get_coord());
+            p.poseFourmi(f);
+            GRILLE.rangePlace(p);
             rangeFourmi(TABFOURMI,f);
             verif = true;
         }if(verif) break;
@@ -133,16 +153,26 @@ void simulation(){
             verif = true;
         }
         }  
+        
         for(int i=0; i< get_nb_colonie(TABFOURMI);i++){
             Place nid = GRILLE.get_nid(i);
             if(nid.get_nbSucre()>=10){
-                Fourmis newf(GRILLE.CoordAlea(),TABFOURMI.size(),i);
-                TABFOURMI.push_back(newf);
-                Place p = GRILLE.chargePlace(newf.get_coord());
-                p.poseFourmi(newf);
-                GRILLE.rangePlace(p);
-                nid.set_contientSucre(nid.get_nbSucre()-5);
-                GRILLE.rangePlace(nid);
+                bool verif = false;
+                while(!verif){
+                    Coord c = GRILLE.coordAlea();
+                    Place tmp = GRILLE.chargePlace(c);
+                    if(tmp.estVide() and tmp.get_pheroNid(i).first >=0.6f){
+                        Fourmis newf(c,TABFOURMI.size()+1,i, tireFourmis());
+                        TABFOURMI.push_back(newf);
+                        Place p = GRILLE.chargePlace(newf.get_coord());
+                        p.poseFourmi(newf);
+                        GRILLE.rangePlace(p);
+                        nid.set_contientSucre(nid.get_nbSucre()-5);
+                        GRILLE.rangePlace(nid);
+                        verif = true;
+
+                    }
+                }
             }
-        }    
+        }
     }

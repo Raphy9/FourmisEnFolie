@@ -61,6 +61,14 @@ bool Place::get_estSurUnePiste(int colonie) const {
 
     } return false;
 }
+
+bool Place::get_estSurUnePisteGuerriere() const {
+    for(auto& elem : pheroSucre){
+        if (elem.first>230 and elem.first<255){
+            return true;
+        }
+    } return false;
+}
 bool Place::get_contientFourmi(){
     return numFourmi!=-1;
 }
@@ -325,7 +333,7 @@ void Grille::placeFourmis(vector<Fourmis> f){
 
 TEST_CASE("Place fourmis"){
     vector<Fourmis> f;
-    f.push_back(Fourmis(Coord(1,2),0,1));
+    f.push_back(Fourmis(Coord(1,2),0,1,0));
     Grille g(5,3);
     g.placeFourmis(f);
     CHECK(1==1);
@@ -382,6 +390,22 @@ TEST_CASE("Test de la fonction get_nid") {
     CHECK_THROWS_AS(grille.get_nid(3), invalid_argument);
 }
 
+
+void initialiseFourmis(Grille &res, int typeF,int i){
+    bool verif = false;
+            while(!verif){
+                Coord c = res.CoordAlea();
+                if(res.chargePlace(c).estVide() and res.chargePlace(c).get_pheroNid(i).first>=float(0.6)){
+                    Fourmis f(c,TABFOURMI.size(),i,typeF);
+                    Place tmp = res.chargePlace(c);
+                    tmp.poseFourmi(f);
+                    TABFOURMI.push_back(f);
+                    res.rangePlace(tmp);
+                    verif = true;
+                }
+            }
+}
+
 Grille initialiseGrille(){
     cout << "Quelle taille de grille souhaitez vous ? (30 max pour 10sec d'éxécution)" << endl;
     cin >> TAILLEGRILLE;
@@ -405,23 +429,20 @@ Grille initialiseGrille(){
     }
     //Pose des fourmis
     int nbf;
+    int nbg;
+    int nbo;
     cout << "Combien de fourmis par colonie voulez vous ? " << endl;
     cin >> nbf;
-
+    cout << "Combien de guerriere ? " << endl;
+    cin >> nbg;
+    nbo = nbf - nbg;
+    cout << "Il y a " << nbo << "fourmis ouvrières." << endl;
+    
     for(int i=0;i<nbCol;i++){
-        for(int j=0;j<nbf;j++){
-            bool verif = false;
-            while(!verif){
-                Coord c = res.CoordAlea();
-                if(res.chargePlace(c).estVide() and res.chargePlace(c).get_pheroNid(i).first>=float(0.6)){
-                    Fourmis f(c,coord_to_ind(c),i);
-                    Place tmp = res.chargePlace(c);
-                    tmp.poseFourmi(f);
-                    TABFOURMI.push_back(f);
-                    res.rangePlace(tmp);
-                    verif = true;
-                }
-            }
+         for(int j=0; j<nbg;j++){
+            initialiseFourmis(res,0,i); //Fourmis guerrieres
+        } for(int j=0; j<nbo;j++){
+            initialiseFourmis(res,1,i); //Fourmis ouvrière
         }
     }
 
@@ -484,7 +505,7 @@ TEST_CASE("Getter Setter") {
         CHECK(p1.get_pheroSucre(i).first == 0);
         CHECK(p1.get_pheroSucre(i).second == i);
     }
-    Fourmis f = Fourmis(Coord(1,1), 5, 0);
+    Fourmis f = Fourmis(Coord(1,1), 5, 0,0);
     p1.poseFourmi(f);
     CHECK(p1.get_numFourmi() == 5);
 }
@@ -506,7 +527,7 @@ TEST_CASE("Test de la fonction coordAlea") {
 
 TEST_CASE("Test de la fonction deplaceFourmi") {
     Grille grille(20, 2); 
-    Fourmis f(Coord(0,0),3,0);
+    Fourmis f(Coord(0,0),3,0,0);
     Place p1 = grille.chargePlace(Coord(0,0));
     Place p2 = grille.chargePlace(Coord(1,1));
     deplaceFourmi(f, p1, p2);

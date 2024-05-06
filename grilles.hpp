@@ -17,6 +17,7 @@ class Place{
         pair<int,int> get_pheroSucre(int col) const;
         pair<float,int>  get_pheroNid(int col) const;
         int getIndColNid();
+        bool get_estSurUnePisteGuerriere() const;
         bool get_estSurUnePiste(int colonie) const;
         void set_num(int n);
         void set_contientSucre(int b);

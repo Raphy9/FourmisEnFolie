@@ -5,10 +5,12 @@
 class Fourmis{
     public :
         //Constructeur
-        Fourmis(Coord c, int ind, int colo);
+        Fourmis(Coord c, int ind, int colo,int type);
+        
         //Getters et setters
         Coord get_coord() const;
         int get_num() const;
+        int get_type() const;
         bool get_porteSucre() const ;
         int get_col() const ;
         void set_col(int colo);
@@ -30,10 +32,10 @@ class Fourmis{
         bool porteSucre;
         bool enVie;
         int col;
+        int typeF;
 
 
 };
 
-vector<Fourmis> creeTabFourmis(EnsCoord e, vector<int> colo);
 Fourmis chercheFourmis(vector<Fourmis> tabf, int ind);
 void rangeFourmi(vector<Fourmis> &tabf, Fourmis f);
