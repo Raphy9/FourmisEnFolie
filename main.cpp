@@ -76,7 +76,7 @@ int main(int argc, char **argv){
     */
     GRILLE = initialiseGrille();
     //Affichage
-    for(int i=0;i<100;i++){
+    for(int i=0;i<2000;i++){
         affiche(GRILLE,TABFOURMI,false);
         simulation();
     }
